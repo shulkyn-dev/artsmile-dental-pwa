@@ -297,6 +297,25 @@
         .cb-err { background:var(--red-lite); color:#9F1239; font-size:12px; font-weight:700; padding:10px 12px; border-radius:10px; margin-bottom:12px; }
         .prefer-call { text-align:center; font-size:13px; color:var(--green); font-weight:800; cursor:pointer; padding:8px; margin-bottom:4px; }
 
+        /* Notifications */
+        .nt-item { display:flex; gap:13px; padding:14px 0; border-bottom:1px solid var(--border); }
+        .nt-item:last-child { border-bottom:none; }
+        .nt-ic { width:42px; height:42px; border-radius:12px; background:var(--p-lite); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+        .nt-t { font-size:14px; font-weight:800; color:var(--text); }
+        .nt-s { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+        .nt-w { font-size:11px; color:var(--muted); margin-top:4px; }
+
+        /* Reviews / rating */
+        .add-review-btn { margin:0 12px 14px; width:calc(100% - 24px); background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:13px; font-size:14px; font-weight:800; color:var(--p); cursor:pointer; }
+        .rv-q { font-size:15px; font-weight:800; color:var(--text); text-align:center; margin-bottom:16px; }
+        .rv-stars { display:flex; justify-content:center; gap:8px; margin-bottom:22px; }
+        .rv-star { font-size:40px; cursor:pointer; line-height:1; filter:grayscale(1); opacity:.35; transition:all .15s; }
+        .rv-star.on { filter:none; opacity:1; transform:scale(1.08); }
+        .rv-err { text-align:center; color:#9F1239; font-size:13px; font-weight:700; margin-bottom:12px; }
+        .rv-textarea { width:100%; min-height:90px; padding:13px 14px; border:2px solid var(--border); border-radius:12px; font-size:15px; font-family:inherit; color:var(--text); outline:none; background:var(--bg); resize:vertical; transition:border .2s,background .2s; }
+        .rv-textarea:focus { border-color:var(--p); background:#fff; }
+        .mbtn-google { width:100%; padding:15px; border:none; border-radius:14px; background:#fff; color:#1a1a1a; font-size:15px; font-weight:800; cursor:pointer; border:2px solid var(--border); margin-top:8px; display:flex; align-items:center; justify-content:center; gap:8px; }
+
         /* Install guide sheet */
         .ig-step { display:flex; gap:14px; align-items:center; margin-bottom:16px; }
         .ig-num { width:30px; height:30px; border-radius:50%; background:var(--p); color:#fff; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -347,9 +366,9 @@
                     <div class="lang-opt" data-l="ru" onclick="setLang('ru')">RU</div>
                     <div class="lang-opt" data-l="en" onclick="setLang('en')">EN</div>
                 </div>
-                <div class="notif-btn">
+                <div class="notif-btn" onclick="openNotifications()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                    <div class="ndot"></div>
+                    <div class="ndot" id="ndot"></div>
                 </div>
             </div>
         </div>
@@ -411,6 +430,7 @@
                 <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#7C3AED">A</div><div><div class="rev-nm">Ayşe D.</div><div class="rev-dt" data-i18n="rev_b_dt"></div></div></div><div class="rev-txt" data-i18n="rev_b_txt"></div></div>
                 <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#DC2626">S</div><div><div class="rev-nm">Selin T.</div><div class="rev-dt" data-i18n="rev_c_dt"></div></div></div><div class="rev-txt" data-i18n="rev_c_txt"></div></div>
             </div>
+            <button class="add-review-btn" data-i18n="rv_open" onclick="openReview()"></button>
             <div style="height:10px"></div>
         </div>
 
@@ -509,6 +529,20 @@
         <div class="mcontent" id="cb-content"></div>
     </div>
 
+    <!-- Notifications sheet -->
+    <div class="sheet" id="ntmodal">
+        <div class="mhandle"></div>
+        <div class="mhdr"><div class="mttl" id="nt-ttl"></div><div class="mclose" onclick="closeSheets()">✕</div></div>
+        <div class="mcontent" id="nt-content"></div>
+    </div>
+
+    <!-- Review sheet -->
+    <div class="sheet" id="rvmodal">
+        <div class="mhandle"></div>
+        <div class="mhdr"><div class="mttl" id="rv-ttl"></div><div class="mclose" onclick="closeSheets()">✕</div></div>
+        <div class="mcontent" id="rv-content"></div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
 </div>
@@ -585,7 +619,18 @@ const I18N = {
     ig_ios_where:"Paylaş butonu Safari'nin alt çubuğundadır",
     ig_android_intro:"Tarayıcı menüsünden:",
     ig_android:["Sağ üstteki <b>⋮</b> menüsüne dokunun","<b>«Ana ekrana ekle» / «Yükle»</b> — bitti! 🎉"],
-    ig_android_note:"Çoğu telefonda butona basınca tek dokunuşla otomatik kurulur."
+    ig_android_note:"Çoğu telefonda butona basınca tek dokunuşla otomatik kurulur.",
+    notif_title:"Bildirimler",
+    notif_1_t:"Randevunuz yaklaşıyor", notif_1_s:"Dr. Fatma Koç · 18 Haziran, 14:30", notif_1_w:"2 saat önce",
+    notif_2_t:"Randevu hatırlatması", notif_2_s:"Randevunuza 1 gün kaldı 🦷", notif_2_w:"Dün",
+    notif_3_t:"WhatsApp hatırlatıcı kuruldu", notif_3_s:"Randevudan 2 saat önce hatırlatacağız", notif_3_w:"3 gün önce",
+    rv_open:"⭐ Yorum yap", rv_title:"Deneyiminizi değerlendirin", rv_q:"Bizi nasıl buldunuz?",
+    rv_comment:"Yorumunuz (isteğe bağlı)", rv_comment_ph:"Birkaç kelime yazın...", rv_submit:"Gönder",
+    rv_pick:"Lütfen bir puan seçin",
+    rv_high_title:"Çok teşekkürler! 🎉", rv_high_txt:"Memnun kaldığınıza sevindik! Yorumunuzu Google'da da paylaşır mısınız? Diğer hastalara çok yardımcı olur.",
+    rv_google:"⭐ Google'da paylaş",
+    rv_low_title:"Geri bildiriminiz için teşekkürler", rv_low_txt:"Üzgünüz! Yöneticimiz en kısa sürede sizinle iletişime geçip durumu düzeltecek.",
+    rv_done:"Kapat"
   },
   ru: {
     clinic_sub:"Стоматология · Стамбул",
@@ -656,7 +701,18 @@ const I18N = {
     ig_ios_where:"Кнопка «Поделиться» — внизу экрана Safari",
     ig_android_intro:"Через меню браузера:",
     ig_android:["Нажмите <b>⋮</b> вверху справа","<b>«Добавить на главный экран» / «Установить»</b> — готово! 🎉"],
-    ig_android_note:"На большинстве телефонов установка идёт в один тап прямо по кнопке."
+    ig_android_note:"На большинстве телефонов установка идёт в один тап прямо по кнопке.",
+    notif_title:"Уведомления",
+    notif_1_t:"Скоро приём", notif_1_s:"Dr. Fatma Koç · 18 июня, 14:30", notif_1_w:"2 часа назад",
+    notif_2_t:"Напоминание о приёме", notif_2_s:"До приёма 1 день 🦷", notif_2_w:"Вчера",
+    notif_3_t:"Напоминание в WhatsApp включено", notif_3_s:"Напомним за 2 часа до приёма", notif_3_w:"3 дня назад",
+    rv_open:"⭐ Оставить отзыв", rv_title:"Оцените визит", rv_q:"Как вам наша клиника?",
+    rv_comment:"Ваш отзыв (необязательно)", rv_comment_ph:"Напишите пару слов...", rv_submit:"Отправить",
+    rv_pick:"Пожалуйста, выберите оценку",
+    rv_high_title:"Большое спасибо! 🎉", rv_high_txt:"Рады, что вам понравилось! Поделитесь отзывом ещё и в Google — это очень помогает другим пациентам.",
+    rv_google:"⭐ Поделиться в Google",
+    rv_low_title:"Спасибо за отзыв", rv_low_txt:"Сожалеем! Наш администратор свяжется с вами и всё исправит.",
+    rv_done:"Закрыть"
   },
   en: {
     clinic_sub:"Dental Clinic · Istanbul",
@@ -727,7 +783,18 @@ const I18N = {
     ig_ios_where:"The Share button is at the bottom of Safari",
     ig_android_intro:"From the browser menu:",
     ig_android:["Tap the <b>⋮</b> menu (top right)","<b>'Add to Home screen' / 'Install'</b> — done! 🎉"],
-    ig_android_note:"On most phones it installs in one tap right from the button."
+    ig_android_note:"On most phones it installs in one tap right from the button.",
+    notif_title:"Notifications",
+    notif_1_t:"Appointment coming up", notif_1_s:"Dr. Fatma Koç · June 18, 14:30", notif_1_w:"2 hours ago",
+    notif_2_t:"Appointment reminder", notif_2_s:"1 day until your appointment 🦷", notif_2_w:"Yesterday",
+    notif_3_t:"WhatsApp reminder set", notif_3_s:"We'll remind you 2h before your visit", notif_3_w:"3 days ago",
+    rv_open:"⭐ Leave a review", rv_title:"Rate your visit", rv_q:"How was your experience?",
+    rv_comment:"Your review (optional)", rv_comment_ph:"Write a few words...", rv_submit:"Submit",
+    rv_pick:"Please pick a rating",
+    rv_high_title:"Thank you so much! 🎉", rv_high_txt:"So glad you enjoyed it! Would you share your review on Google too? It really helps other patients.",
+    rv_google:"⭐ Share on Google",
+    rv_low_title:"Thanks for your feedback", rv_low_txt:"We're sorry! Our manager will contact you shortly to make it right.",
+    rv_done:"Close"
   }
 };
 
@@ -743,6 +810,8 @@ function applyLang(){
     renderContact();
     if(document.getElementById('bmodal').classList.contains('on')) render();
     if(document.getElementById('cbmodal').classList.contains('on')) renderCallback();
+    if(document.getElementById('ntmodal').classList.contains('on')) renderNotifications();
+    if(document.getElementById('rvmodal').classList.contains('on')) renderReview();
 }
 function setLang(l){ LANG=l; localStorage.setItem('lang',l); applyLang(); }
 
@@ -1064,6 +1133,66 @@ function submitCallback(){
     callbackRequests.push({ ...cb, at: new Date().toISOString() });
     cbDone = true; renderCallback();
 }
+
+/* ── Notifications (звоночек) ── */
+function openNotifications(){
+    renderNotifications();
+    const dot = document.getElementById('ndot'); if(dot) dot.style.display='none'; // отметили прочитанным
+    openSheet('ntmodal');
+}
+function renderNotifications(){
+    document.getElementById('nt-ttl').textContent = t('notif_title');
+    const items = [
+        ['🔔', t('notif_1_t'), t('notif_1_s'), t('notif_1_w')],
+        ['🦷', t('notif_2_t'), t('notif_2_s'), t('notif_2_w')],
+        ['💬', t('notif_3_t'), t('notif_3_s'), t('notif_3_w')]
+    ];
+    document.getElementById('nt-content').innerHTML = items.map(([ic,tt,ss,ww])=>`
+        <div class="nt-item">
+            <div class="nt-ic">${ic}</div>
+            <div style="flex:1"><div class="nt-t">${tt}</div><div class="nt-s">${ss}</div><div class="nt-w">${ww}</div></div>
+        </div>`).join('');
+}
+
+/* ── Reviews (отзыв → Google) ── */
+const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=REPLACE_WITH_CLINIC_PLACE_ID';
+let rvStars = 0, rvComment = '', rvDone = false;
+function openReview(){ rvStars=0; rvComment=''; rvDone=false; renderReview(); openSheet('rvmodal'); }
+function rvSetStars(n){ rvStars=n; renderReview(); }
+function renderReview(){
+    const c = document.getElementById('rv-content');
+    document.getElementById('rv-ttl').textContent = t('rv_title');
+    if(rvDone){
+        const high = rvStars >= 4;
+        document.getElementById('rv-ttl').textContent = high ? t('rv_high_title') : t('rv_low_title');
+        c.innerHTML = `
+            <div class="succ">
+                <div class="succ-ic" style="background:${high?'linear-gradient(135deg,#10B981,#059669)':'linear-gradient(135deg,#1565C0,#0D1B4E)'}">${high?'🎉':'🙏'}</div>
+                <div class="succ-ttl">${high?t('rv_high_title'):t('rv_low_title')}</div>
+                <div class="succ-txt">${high?t('rv_high_txt'):t('rv_low_txt')}</div>
+                ${high ? `<button class="mbtn-google" onclick="goGoogleReview()"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.2c0-.7-.1-1.4-.2-2H12v3.9h5.9a5 5 0 0 1-2.2 3.3v2.700h3.5c2-1.9 3.3-4.7 3.3-7.9z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2 7.1l3.7 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg>${t('rv_google')}</button>` : ''}
+                <button class="mbtn" style="margin-top:12px" onclick="closeSheets()">${t('rv_done')}</button>
+            </div>`;
+        return;
+    }
+    c.innerHTML = `
+        <div class="rv-q">${t('rv_q')}</div>
+        <div id="rv-err-slot"></div>
+        <div class="rv-stars">
+            ${[1,2,3,4,5].map(n=>`<div class="rv-star${rvStars>=n?' on':''}" onclick="rvSetStars(${n})">⭐</div>`).join('')}
+        </div>
+        <div class="cb-field"><label class="cb-label">${t('rv_comment')}</label>
+            <textarea class="rv-textarea" id="rv-comment" oninput="rvComment=this.value" placeholder="${t('rv_comment_ph')}">${rvComment.replace(/</g,'&lt;')}</textarea></div>
+        <button class="mbtn" onclick="submitReview()">${t('rv_submit')}</button>`;
+}
+function submitReview(){
+    if(rvStars===0){
+        const s=document.getElementById('rv-err-slot'); if(s) s.innerHTML=`<div class="rv-err">${t('rv_pick')}</div>`;
+        return;
+    }
+    rvDone = true; renderReview();
+}
+function goGoogleReview(){ window.open(GOOGLE_REVIEW_URL, '_blank'); }
 
 /* ── Toast ── */
 function toast(msg){

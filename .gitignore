@@ -1,0 +1,13 @@
+# Build / deploy output (генерируется из исходников)
+public/
+
+# Python артефакты
+__pycache__/
+*.pyc
+
+# Сгенерированный QR (пересоздаётся из make_qr.py)
+qr_artsmile.png
+
+# OS
+Thumbs.db
+.DS_Store

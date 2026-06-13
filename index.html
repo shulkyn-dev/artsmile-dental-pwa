@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0D1B4E">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ArtSmile">
+    <title>ArtSmile Dental Clinic</title>
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+        :root {
+            --p:      #1565C0;
+            --p-dark: #0D1B4E;
+            --p-mid:  #1976D2;
+            --p-lite: #E3F2FD;
+            --gold:   #F4C430;
+            --red:    #E11D48;
+            --red-lite:#FFE4E6;
+            --text:   #111827;
+            --muted:  #6B7280;
+            --bg:     #EEF2FA;
+            --card:   #FFFFFF;
+            --border: #E2E8F4;
+            --green:  #10B981;
+            --r:      16px;
+            --sh:     0 2px 14px rgba(13,27,78,.09);
+        }
+
+        html, body {
+            width:100%; height:100%;
+            overflow:hidden;
+            font-family:'Inter',-apple-system,sans-serif;
+            background: var(--p-dark);
+        }
+
+        #app {
+            width:100%; max-width:430px; height:100vh; height:100dvh;
+            margin:0 auto; background:var(--bg);
+            display:flex; flex-direction:column;
+            position:relative; overflow:hidden;
+        }
+
+        /* ── Status Bar ─── */
+        .sbar { background:var(--p-dark); color:#fff; padding:8px 20px 4px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+        .sbar-time { font-size:15px; font-weight:700; }
+        .sbar-icons { display:flex; gap:5px; align-items:center; }
+
+        /* ── Header ─── */
+        .hdr { background:var(--p-dark); color:#fff; padding:12px 16px 16px; flex-shrink:0; }
+        .hdr-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+        .logo { display:flex; align-items:center; gap:10px; min-width:0; }
+        .logo-box { width:40px; height:40px; background:var(--gold); border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+        .logo-name { font-size:18px; font-weight:800; letter-spacing:-.3px; }
+        .logo-sub  { font-size:11px; opacity:.65; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .hdr-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+        .lang-sw { display:flex; background:rgba(255,255,255,.13); border-radius:9px; padding:3px; gap:2px; }
+        .lang-opt { font-size:11px; font-weight:800; padding:5px 7px; border-radius:6px; color:rgba(255,255,255,.6); cursor:pointer; transition:all .18s; }
+        .lang-opt.on { background:var(--gold); color:#1a1400; }
+        .notif-btn { width:40px; height:40px; background:rgba(255,255,255,.13); border-radius:11px; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; flex-shrink:0; }
+        .ndot { position:absolute; top:7px; right:7px; width:8px; height:8px; background:#EF4444; border-radius:50%; border:2px solid var(--p-dark); }
+
+        /* ── Page wrapper ─── */
+        .content { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+        .page { display:none; padding-bottom:80px; }
+        .page.active { display:block; animation:fadeUp .22s ease; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── Bottom Nav ─── */
+        .bnav { background:var(--card); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0 22px; flex-shrink:0; position:relative; z-index:100; }
+        .ni { display:flex; flex-direction:column; align-items:center; gap:3px; padding:4px 12px; cursor:pointer; }
+        .ni-icon { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:21px; transition:background .2s; }
+        .ni-lbl { font-size:10px; font-weight:600; color:var(--muted); transition:color .2s; white-space:nowrap; }
+        .ni.active .ni-icon { background:var(--p); }
+        .ni.active .ni-lbl  { color:var(--p); }
+        .ni-book { margin-top:-22px; }
+        .ni-book .ni-icon { width:56px; height:56px; border-radius:17px; background:linear-gradient(135deg,var(--p),var(--p-dark)); font-size:26px; box-shadow:0 4px 18px rgba(21,101,192,.45); }
+
+        /* ── Shared ─── */
+        .sec { margin:0 12px 14px; }
+        .sec-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+        .sec-ttl { font-size:17px; font-weight:800; color:var(--text); }
+        .sec-lnk { font-size:13px; color:var(--p); font-weight:600; cursor:pointer; }
+        .scroll-row { display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+        .scroll-row::-webkit-scrollbar { display:none; }
+
+        /* ── Hero ─── */
+        .hero { background:linear-gradient(135deg,var(--p-mid) 0%,var(--p) 100%); margin:12px 12px 10px; border-radius:22px; padding:22px 20px; color:#fff; position:relative; overflow:hidden; cursor:pointer; }
+        .hero::before { content:''; position:absolute; top:-28px; right:-28px; width:140px; height:140px; background:rgba(255,255,255,.08); border-radius:50%; }
+        .hero::after { content:''; position:absolute; bottom:-50px; right:10px; width:180px; height:180px; background:rgba(255,255,255,.05); border-radius:50%; }
+        .hero-badge { display:inline-block; background:rgba(255,255,255,.2); font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; margin-bottom:10px; }
+        .hero-ttl { font-size:23px; font-weight:800; line-height:1.25; margin-bottom:14px; }
+        .hero-cta { display:inline-flex; align-items:center; gap:6px; background:var(--gold); color:#1a1400; padding:11px 22px; border-radius:50px; font-weight:800; font-size:14px; position:relative; z-index:1; }
+        .hero-emoji { position:absolute; right:18px; bottom:4px; font-size:72px; opacity:.35; z-index:0; }
+
+        /* ── Emergency banner ─── */
+        .emg-ban { margin:0 12px 14px; background:var(--red-lite); border:1.5px solid #FECDD3; border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:12px; cursor:pointer; }
+        .emg-ic { font-size:26px; }
+        .emg-txt { flex:1; }
+        .emg-ttl { font-size:13px; font-weight:800; color:#9F1239; }
+        .emg-sub { font-size:11px; color:#BE123C; opacity:.8; }
+        .emg-arr { color:var(--red); font-weight:800; font-size:18px; }
+
+        /* ── Quick Actions ─── */
+        .qa-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 12px 14px; }
+        .qa { background:var(--card); border-radius:15px; padding:14px 6px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; box-shadow:var(--sh); transition:transform .12s; }
+        .qa:active { transform:scale(.95); }
+        .qa-ic  { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+        .qa-lbl { font-size:11px; font-weight:700; color:var(--text); text-align:center; line-height:1.2; }
+
+        .svc-card { background:var(--card); border-radius:var(--r); padding:16px; min-width:130px; flex-shrink:0; cursor:pointer; box-shadow:var(--sh); transition:transform .12s; }
+        .svc-card:active { transform:scale(.96); }
+        .svc-ic   { font-size:30px; margin-bottom:10px; }
+        .svc-name { font-size:13px; font-weight:800; color:var(--text); margin-bottom:4px; }
+        .svc-pr   { font-size:12px; font-weight:700; color:var(--p); }
+
+        .doc-card { background:var(--card); border-radius:var(--r); padding:16px; min-width:152px; flex-shrink:0; cursor:pointer; box-shadow:var(--sh); text-align:center; }
+        .doc-ava { width:66px; height:66px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#fff; }
+        .doc-nm   { font-size:13px; font-weight:800; color:var(--text); margin-bottom:3px; }
+        .doc-sp   { font-size:11px; color:var(--muted); margin-bottom:7px; }
+        .stars    { color:#F59E0B; font-size:12px; }
+
+        .rev-card { background:var(--card); border-radius:var(--r); padding:16px; min-width:240px; flex-shrink:0; box-shadow:var(--sh); }
+        .rev-hdr  { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+        .rev-ava  { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:#fff; flex-shrink:0; }
+        .rev-nm   { font-size:13px; font-weight:700; color:var(--text); }
+        .rev-dt   { font-size:11px; color:var(--muted); }
+        .rev-txt  { font-size:12px; color:var(--muted); line-height:1.55; }
+        .reviews-scroll { display:flex; gap:10px; overflow-x:auto; padding:2px 12px 14px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+        .reviews-scroll::-webkit-scrollbar { display:none; }
+
+        .phdr { background:var(--p-dark); color:#fff; padding:16px 20px 20px; }
+        .phdr-t { font-size:22px; font-weight:800; }
+        .phdr-s { font-size:13px; opacity:.65; margin-top:3px; }
+
+        .svc-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px; }
+        .svc-item { background:var(--card); border-radius:var(--r); padding:18px 14px; cursor:pointer; box-shadow:var(--sh); transition:transform .12s; }
+        .svc-item:active { transform:scale(.96); }
+        .svc-item-ic   { font-size:36px; margin-bottom:12px; }
+        .svc-item-nm   { font-size:14px; font-weight:800; color:var(--text); margin-bottom:4px; }
+        .svc-item-dsc  { font-size:11px; color:var(--muted); margin-bottom:10px; line-height:1.45; min-height:32px; }
+        .svc-item-pr   { font-size:12px; font-weight:700; color:var(--p); background:var(--p-lite); display:inline-block; padding:4px 10px; border-radius:20px; }
+
+        .doc-list { padding:16px; display:flex; flex-direction:column; gap:12px; }
+        .doc-row  { background:var(--card); border-radius:var(--r); padding:16px; display:flex; gap:14px; align-items:flex-start; cursor:pointer; box-shadow:var(--sh); }
+        .doc-row-ava { width:72px; height:72px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#fff; flex-shrink:0; }
+        .doc-row-nm  { font-size:15px; font-weight:800; color:var(--text); margin-bottom:3px; }
+        .doc-row-sp  { font-size:12px; color:var(--p); font-weight:700; margin-bottom:5px; }
+        .doc-row-exp { font-size:12px; color:var(--muted); margin-bottom:7px; }
+        .avail { font-size:11px; padding:4px 10px; border-radius:20px; font-weight:700; }
+        .avail-g { background:#D1FAE5; color:#065F46; }
+        .avail-o { background:#FEF3C7; color:#92400E; }
+
+        .prof-hdr { background:linear-gradient(135deg,var(--p-dark),var(--p)); padding:26px 20px 30px; color:#fff; text-align:center; }
+        .prof-ava { width:84px; height:84px; background:var(--gold); border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:800; color:var(--p-dark); border:3px solid rgba(255,255,255,.3); }
+        .prof-nm   { font-size:21px; font-weight:800; }
+        .prof-id   { font-size:13px; opacity:.65; margin-top:4px; }
+        .prof-stats { display:flex; justify-content:center; gap:32px; margin-top:20px; }
+        .st-num { font-size:24px; font-weight:800; }
+        .st-lbl { font-size:11px; opacity:.65; }
+
+        .apt-list { padding:16px; }
+        .apt-card { background:var(--card); border-radius:var(--r); padding:16px; margin-bottom:12px; box-shadow:var(--sh); display:flex; gap:14px; align-items:center; }
+        .apt-dt   { background:var(--p-lite); border-radius:12px; padding:10px; text-align:center; min-width:52px; }
+        .apt-day  { font-size:24px; font-weight:800; color:var(--p); line-height:1; }
+        .apt-mon  { font-size:11px; color:var(--p); font-weight:700; margin-top:2px; }
+        .apt-svc  { font-size:14px; font-weight:800; color:var(--text); }
+        .apt-doc  { font-size:12px; color:var(--muted); margin-top:3px; }
+        .apt-time { font-size:12px; color:var(--p); font-weight:700; margin-top:3px; }
+        .sbadge   { font-size:11px; padding:5px 10px; border-radius:20px; font-weight:700; white-space:nowrap; }
+        .sb-ok  { background:#D1FAE5; color:#065F46; }
+        .sb-pnd { background:#FEF3C7; color:#92400E; }
+        .sb-done{ background:#F3F4F6; color:#6B7280; }
+
+        .overlay { position:absolute; inset:0; background:rgba(0,0,0,.52); z-index:150; opacity:0; pointer-events:none; transition:opacity .3s; }
+        .overlay.on { opacity:1; pointer-events:all; }
+
+        .sheet { position:absolute; bottom:0; left:0; right:0; background:var(--card); border-radius:24px 24px 0 0; transform:translateY(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); z-index:200; max-height:92vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 -6px 40px rgba(0,0,0,.2); }
+        .sheet.on { transform:translateY(0); }
+        .mhandle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
+        .mhdr { padding:14px 20px 0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+        .mttl  { font-size:20px; font-weight:800; color:var(--text); }
+        .mclose { width:34px; height:34px; background:var(--bg); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:var(--muted); }
+        .mcontent { flex:1; overflow-y:auto; padding:16px 20px 30px; }
+
+        .steps { display:flex; gap:8px; margin-bottom:22px; }
+        .sdot { height:4px; border-radius:2px; flex:1; background:var(--border); transition:background .3s; }
+        .sdot.act  { background:var(--p); }
+        .sdot.done { background:var(--green); }
+        .sttl { font-size:15px; font-weight:800; color:var(--text); margin-bottom:14px; }
+
+        .emg-big { width:100%; background:linear-gradient(135deg,#F43F5E,#BE123C); color:#fff; border:none; border-radius:14px; padding:15px; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:18px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 16px rgba(225,29,72,.35); }
+
+        .opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+        .opt { background:var(--bg); border:2px solid transparent; border-radius:14px; padding:16px 10px; cursor:pointer; text-align:center; transition:all .2s; }
+        .opt.sel { background:var(--p-lite); border-color:var(--p); }
+        .opt-ic  { font-size:28px; margin-bottom:8px; }
+        .opt-lbl { font-size:13px; font-weight:700; color:var(--text); }
+        .notsure-link { text-align:center; font-size:13px; color:var(--p); font-weight:700; cursor:pointer; padding:10px; margin-bottom:6px; }
+
+        .cal { background:var(--bg); border-radius:var(--r); padding:16px; margin-bottom:16px; }
+        .cal-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+        .cal-mon { font-size:15px; font-weight:800; color:var(--text); }
+        .cal-nav { font-size:20px; cursor:pointer; color:var(--p); padding:2px 8px; }
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; }
+        .cal-dlbl { font-size:11px; font-weight:700; color:var(--muted); padding:4px 0; }
+        .cal-d { padding:8px 2px; border-radius:9px; font-size:13px; font-weight:500; cursor:pointer; color:var(--text); transition:all .15s; }
+        .cal-d.sel  { background:var(--p); color:#fff; font-weight:800; }
+        .cal-d.tdy  { color:var(--p); font-weight:800; }
+        .cal-d.off  { opacity:.3; cursor:not-allowed; }
+        .cal-d:not(.off):not(.sel):hover { background:var(--p-lite); }
+
+        .soonest { background:#ECFDF5; border:1px solid #A7F3D0; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:#065F46; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; }
+
+        .tslots { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+        .ts { padding:10px 16px; background:var(--bg); border:2px solid transparent; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; color:var(--text); position:relative; }
+        .ts.sel { background:var(--p-lite); border-color:var(--p); color:var(--p); }
+        .ts.na  { opacity:.4; cursor:not-allowed; text-decoration:line-through; }
+        .slot-hint { font-size:11px; color:var(--muted); margin-bottom:16px; }
+        .nofree { font-size:13px; color:var(--red); font-weight:700; padding:8px 0 16px; }
+
+        .dsel-row { display:flex; align-items:center; gap:12px; border:2px solid transparent; border-radius:14px; padding:12px; cursor:pointer; transition:all .2s; margin-bottom:10px; background:var(--bg); }
+        .dsel-row.sel { background:var(--p-lite); border-color:var(--p); }
+        .dsel-row.any { border:2px dashed #93C5FD; background:#F0F7FF; }
+        .dsel-row.any.sel { border-style:solid; border-color:var(--p); background:var(--p-lite); }
+        .dsel-ava { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; flex-shrink:0; }
+        .dsel-nm  { font-size:14px; font-weight:800; color:var(--text); }
+        .dsel-sp  { font-size:12px; color:var(--muted); }
+
+        .conf-box { background:var(--bg); border-radius:var(--r); padding:20px; margin-bottom:16px; }
+        .conf-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); gap:10px; }
+        .conf-row:last-child { border-bottom:none; }
+        .conf-lbl { font-size:13px; color:var(--muted); }
+        .conf-val { font-size:13px; font-weight:700; color:var(--text); text-align:right; }
+        .notebox { background:#FEF3C7; border-radius:12px; padding:13px; margin-bottom:16px; font-size:12px; color:#92400E; line-height:1.5; }
+        .dupbox { background:var(--red-lite); border-radius:12px; padding:13px; margin-bottom:16px; font-size:12px; color:#9F1239; line-height:1.5; font-weight:700; }
+
+        .mbtn { width:100%; padding:16px; border:none; border-radius:14px; background:linear-gradient(135deg,var(--p),var(--p-dark)); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 4px 18px rgba(21,101,192,.4); margin-top:12px; }
+        .mbtn:disabled, .mbtn.dim { opacity:.45; pointer-events:none; }
+
+        .succ { text-align:center; padding:30px 10px; }
+        .succ-ic { width:86px; height:86px; background:linear-gradient(135deg,#10B981,#059669); border-radius:50%; margin:0 auto 22px; display:flex; align-items:center; justify-content:center; font-size:40px; }
+        .succ-ttl { font-size:23px; font-weight:800; color:var(--text); margin-bottom:10px; }
+        .succ-txt { font-size:14px; color:var(--muted); line-height:1.65; }
+        .succ-alt { text-align:center; font-size:13px; color:var(--muted); cursor:pointer; margin-top:14px; }
+
+        #ibanner { background:linear-gradient(135deg,var(--p),var(--p-dark)); color:#fff; padding:12px 16px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+        .ib-ic  { font-size:28px; }
+        .ib-txt { flex:1; }
+        .ib-ttl { font-size:13px; font-weight:800; }
+        .ib-sub { font-size:11px; opacity:.75; }
+        .ib-btn { background:var(--gold); color:#1a1400; padding:8px 14px; border-radius:9px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap; }
+        .ib-x   { opacity:.6; cursor:pointer; font-size:20px; padding:4px; }
+
+        .wa-fab { position:absolute; bottom:112px; right:16px; width:52px; height:52px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 4px 18px rgba(37,211,102,.45); cursor:pointer; z-index:90; }
+        .divlbl { font-size:16px; font-weight:800; color:var(--text); margin:4px 0 12px; }
+
+        /* Contact card */
+        .contact-card { margin:0 12px 14px; background:var(--card); border-radius:var(--r); padding:16px; box-shadow:var(--sh); }
+        .cc-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+        .cc-ttl { font-size:15px; font-weight:800; color:var(--text); }
+        .cc-status { font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; }
+        .cc-open { background:#D1FAE5; color:#065F46; }
+        .cc-closed { background:var(--red-lite); color:#9F1239; }
+        .cc-row { display:flex; align-items:center; gap:11px; padding:8px 0; }
+        .cc-ic { width:34px; height:34px; border-radius:10px; background:var(--p-lite); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+        .cc-lbl { font-size:11px; color:var(--muted); }
+        .cc-val { font-size:14px; font-weight:700; color:var(--text); }
+        .cc-note { background:#FEF3C7; border-radius:10px; padding:10px 12px; font-size:12px; color:#92400E; line-height:1.5; margin:10px 0 4px; }
+        .cc-btns { display:flex; gap:10px; margin-top:12px; }
+        .cc-btn { flex:1; padding:13px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border:none; }
+        .cc-btn-call { background:var(--green); color:#fff; }
+        .cc-btn-cb { background:var(--p-lite); color:var(--p); }
+
+        .call-fab { position:absolute; bottom:172px; right:16px; width:52px; height:52px; background:var(--p); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:23px; box-shadow:0 4px 18px rgba(21,101,192,.45); cursor:pointer; z-index:90; }
+
+        /* Callback form */
+        .cb-sub { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+        .cb-field { margin-bottom:14px; }
+        .cb-label { font-size:13px; font-weight:700; color:var(--text); margin-bottom:7px; display:block; }
+        .cb-input { width:100%; padding:13px 14px; border:2px solid var(--border); border-radius:12px; font-size:15px; font-family:inherit; color:var(--text); outline:none; transition:border .2s,background .2s; background:var(--bg); }
+        .cb-input:focus { border-color:var(--p); background:#fff; }
+        .cb-chips { display:flex; flex-wrap:wrap; gap:8px; }
+        .cb-chip { padding:10px 14px; background:var(--bg); border:2px solid transparent; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; color:var(--text); transition:all .2s; }
+        .cb-chip.sel { background:var(--p-lite); border-color:var(--p); color:var(--p); }
+        .cb-err { background:var(--red-lite); color:#9F1239; font-size:12px; font-weight:700; padding:10px 12px; border-radius:10px; margin-bottom:12px; }
+        .prefer-call { text-align:center; font-size:13px; color:var(--green); font-weight:800; cursor:pointer; padding:8px; margin-bottom:4px; }
+
+        /* Install guide sheet */
+        .ig-step { display:flex; gap:14px; align-items:flex-start; margin-bottom:18px; }
+        .ig-num { width:30px; height:30px; border-radius:50%; background:var(--p); color:#fff; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .ig-txt { font-size:14px; color:var(--text); line-height:1.5; padding-top:3px; }
+        .toast { position:absolute; left:50%; bottom:100px; transform:translateX(-50%) translateY(20px); background:var(--p-dark); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px; font-weight:700; z-index:300; opacity:0; transition:all .3s; white-space:nowrap; pointer-events:none; }
+        .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <div id="ibanner">
+        <div class="ib-ic">📱</div>
+        <div class="ib-txt">
+            <div class="ib-ttl" data-i18n="ib_title"></div>
+            <div class="ib-sub" data-i18n="ib_sub"></div>
+        </div>
+        <div class="ib-btn" data-i18n="ib_btn" onclick="doInstall()"></div>
+        <div class="ib-x" onclick="this.parentElement.style.display='none'">✕</div>
+    </div>
+
+    <div class="sbar">
+        <div class="sbar-time" id="clock">9:41</div>
+        <div class="sbar-icons">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="white"><rect x="0" y="4" width="3" height="8" rx="1" opacity=".4"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1" opacity=".65"/><rect x="9" y="1" width="3" height="11" rx="1" opacity=".85"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="17" height="13" viewBox="0 0 20 13" fill="none" stroke="white" stroke-linecap="round"><path d="M1 4.5C4.3 1.5 7.9 0 10 0s5.7 1.5 9 4.5" stroke-width="2" opacity=".4"/><path d="M3.5 7.5C5.8 5.3 7.8 4 10 4s4.2 1.3 6.5 3.5" stroke-width="2" opacity=".7"/><circle cx="10" cy="12" r="1.5" fill="white"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="white" stroke-width="1.5"/><rect x="23" y="4" width="2" height="4" rx="1" fill="white" opacity=".5"/><rect x="1.5" y="2.5" width="17" height="7" rx="1.5" fill="white"/></svg>
+        </div>
+    </div>
+
+    <div class="hdr">
+        <div class="hdr-row">
+            <div class="logo">
+                <div class="logo-box">🦷</div>
+                <div style="min-width:0">
+                    <div class="logo-name">ArtSmile</div>
+                    <div class="logo-sub" data-i18n="clinic_sub"></div>
+                </div>
+            </div>
+            <div class="hdr-right">
+                <div class="lang-sw">
+                    <div class="lang-opt" data-l="tr" onclick="setLang('tr')">TR</div>
+                    <div class="lang-opt" data-l="ru" onclick="setLang('ru')">RU</div>
+                    <div class="lang-opt" data-l="en" onclick="setLang('en')">EN</div>
+                </div>
+                <div class="notif-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <div class="ndot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- HOME -->
+        <div class="page active" id="page-home">
+            <div class="hero" onclick="openBooking()">
+                <div class="hero-badge" data-i18n="hero_badge"></div>
+                <div class="hero-ttl" data-i18n-html="hero_title"></div>
+                <div class="hero-cta" data-i18n="hero_cta"></div>
+                <div class="hero-emoji">🦷</div>
+            </div>
+
+            <div class="emg-ban" onclick="openEmergency()">
+                <div class="emg-ic">🚨</div>
+                <div class="emg-txt">
+                    <div class="emg-ttl" data-i18n="emg_ban_ttl"></div>
+                    <div class="emg-sub" data-i18n="emg_ban_sub"></div>
+                </div>
+                <div class="emg-arr">→</div>
+            </div>
+
+            <div class="qa-grid">
+                <div class="qa" onclick="openBooking()"><div class="qa-ic" style="background:#EEF2FF">📅</div><div class="qa-lbl" data-i18n="qa_book"></div></div>
+                <div class="qa" onclick="nav('services')"><div class="qa-ic" style="background:#FFF7ED">🦷</div><div class="qa-lbl" data-i18n="qa_services"></div></div>
+                <div class="qa" onclick="nav('doctors')"><div class="qa-ic" style="background:#F0FDF4">👨‍⚕️</div><div class="qa-lbl" data-i18n="qa_doctors"></div></div>
+                <div class="qa" onclick="showWA()"><div class="qa-ic" style="background:#F0FDF4">💬</div><div class="qa-lbl" data-i18n="qa_whatsapp"></div></div>
+            </div>
+
+            <div class="contact-card" id="contact-card"></div>
+
+            <div class="sec">
+                <div class="sec-hdr"><div class="sec-ttl" data-i18n="pop_services"></div><div class="sec-lnk" data-i18n="see_all" onclick="nav('services')"></div></div>
+                <div class="scroll-row">
+                    <div class="svc-card" onclick="openBooking('implant')"><div class="svc-ic">🦷</div><div class="svc-name" data-i18n="implant"></div><div class="svc-pr">₺3.500+</div></div>
+                    <div class="svc-card" onclick="openBooking('veneer')"><div class="svc-ic">✨</div><div class="svc-name" data-i18n="veneer"></div><div class="svc-pr">₺2.800+</div></div>
+                    <div class="svc-card" onclick="openBooking('whitening')"><div class="svc-ic">💎</div><div class="svc-name" data-i18n="whitening"></div><div class="svc-pr">₺850+</div></div>
+                    <div class="svc-card" onclick="openBooking('ortho')"><div class="svc-ic">🔄</div><div class="svc-name" data-i18n="ortho"></div><div class="svc-pr">₺5.500+</div></div>
+                </div>
+            </div>
+
+            <div class="sec">
+                <div class="sec-hdr"><div class="sec-ttl" data-i18n="our_doctors"></div><div class="sec-lnk" data-i18n="see_all" onclick="nav('doctors')"></div></div>
+                <div class="scroll-row">
+                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)">A</div><div class="doc-nm">Dr. Ahmet Yılmaz</div><div class="doc-sp" data-i18n="spec1_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">5.0</span></div></div>
+                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">F</div><div class="doc-nm">Dr. Fatma Koç</div><div class="doc-sp" data-i18n="spec2_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">4.9</span></div></div>
+                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#059669,#065F46)">M</div><div class="doc-nm">Dr. Mehmet Öz</div><div class="doc-sp" data-i18n="spec3_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">4.8</span></div></div>
+                </div>
+            </div>
+
+            <div class="sec">
+                <div class="sec-hdr"><div class="sec-ttl" data-i18n="reviews"></div><div class="sec-lnk" data-i18n="reviews_count"></div></div>
+            </div>
+            <div class="reviews-scroll">
+                <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#1565C0">M</div><div><div class="rev-nm">Mehmet K.</div><div class="rev-dt" data-i18n="rev_a_dt"></div></div></div><div class="rev-txt" data-i18n="rev_a_txt"></div></div>
+                <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#7C3AED">A</div><div><div class="rev-nm">Ayşe D.</div><div class="rev-dt" data-i18n="rev_b_dt"></div></div></div><div class="rev-txt" data-i18n="rev_b_txt"></div></div>
+                <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#DC2626">S</div><div><div class="rev-nm">Selin T.</div><div class="rev-dt" data-i18n="rev_c_dt"></div></div></div><div class="rev-txt" data-i18n="rev_c_txt"></div></div>
+            </div>
+            <div style="height:10px"></div>
+        </div>
+
+        <!-- SERVICES -->
+        <div class="page" id="page-services">
+            <div class="phdr"><div class="phdr-t" data-i18n="services_title"></div><div class="phdr-s" data-i18n="services_sub"></div></div>
+            <div class="svc-grid">
+                <div class="svc-item" onclick="openBooking('implant')"><div class="svc-item-ic">🦷</div><div class="svc-item-nm" data-i18n="implant"></div><div class="svc-item-dsc" data-i18n="implant_d"></div><div class="svc-item-pr">₺3.500+</div></div>
+                <div class="svc-item" onclick="openBooking('veneer')"><div class="svc-item-ic">✨</div><div class="svc-item-nm" data-i18n="veneer"></div><div class="svc-item-dsc" data-i18n="veneer_d"></div><div class="svc-item-pr">₺2.800+</div></div>
+                <div class="svc-item" onclick="openBooking('whitening')"><div class="svc-item-ic">💎</div><div class="svc-item-nm" data-i18n="whitening"></div><div class="svc-item-dsc" data-i18n="whitening_d"></div><div class="svc-item-pr">₺850+</div></div>
+                <div class="svc-item" onclick="openBooking('ortho')"><div class="svc-item-ic">🔄</div><div class="svc-item-nm" data-i18n="ortho"></div><div class="svc-item-dsc" data-i18n="ortho_d"></div><div class="svc-item-pr">₺5.500+</div></div>
+                <div class="svc-item" onclick="openBooking('canal')"><div class="svc-item-ic">🩺</div><div class="svc-item-nm" data-i18n="canal"></div><div class="svc-item-dsc" data-i18n="canal_d"></div><div class="svc-item-pr">₺600+</div></div>
+                <div class="svc-item" onclick="openBooking('cleaning')"><div class="svc-item-ic">🧹</div><div class="svc-item-nm" data-i18n="cleaning"></div><div class="svc-item-dsc" data-i18n="cleaning_d"></div><div class="svc-item-pr">₺350+</div></div>
+                <div class="svc-item" onclick="openBooking('zirconium')"><div class="svc-item-ic">👑</div><div class="svc-item-nm" data-i18n="zirconium"></div><div class="svc-item-dsc" data-i18n="zirconium_d"></div><div class="svc-item-pr">₺2.200+</div></div>
+                <div class="svc-item" onclick="openBooking('smile')"><div class="svc-item-ic">😁</div><div class="svc-item-nm" data-i18n="smile"></div><div class="svc-item-dsc" data-i18n="smile_d"></div><div class="svc-item-pr">₺1.200+</div></div>
+            </div>
+        </div>
+
+        <!-- DOCTORS -->
+        <div class="page" id="page-doctors">
+            <div class="phdr"><div class="phdr-t" data-i18n="doctors_title"></div><div class="phdr-s" data-i18n="doctors_sub"></div></div>
+            <div class="doc-list">
+                <div class="doc-row" onclick="openBookingDoc('AY')">
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)">AY</div>
+                    <div><div class="doc-row-nm">Dr. Ahmet Yılmaz</div><div class="doc-row-sp" data-i18n="spec1"></div><div class="doc-row-exp" data-i18n="exp1"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">5.0 · <span data-i18n="rev342"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
+                </div>
+                <div class="doc-row" onclick="openBookingDoc('FK')">
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">FK</div>
+                    <div><div class="doc-row-nm">Dr. Fatma Koç</div><div class="doc-row-sp" data-i18n="spec2"></div><div class="doc-row-exp" data-i18n="exp2"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev287"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
+                </div>
+                <div class="doc-row" onclick="openBookingDoc('MO')">
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#059669,#065F46)">MÖ</div>
+                    <div><div class="doc-row-nm">Dr. Mehmet Öztürk</div><div class="doc-row-sp" data-i18n="spec3"></div><div class="doc-row-exp" data-i18n="exp3"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.8 · <span data-i18n="rev195"></span></span></div><span class="avail avail-o" data-i18n="avail_tomorrow"></span></div>
+                </div>
+                <div class="doc-row" onclick="openBookingDoc('ZA')">
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#DC2626,#991B1B)">ZA</div>
+                    <div><div class="doc-row-nm">Dr. Zeynep Arslan</div><div class="doc-row-sp" data-i18n="spec4"></div><div class="doc-row-exp" data-i18n="exp4"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev158"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="page" id="page-profile">
+            <div class="prof-hdr">
+                <div class="prof-ava">A</div>
+                <div class="prof-nm">Ahmet Demir</div>
+                <div class="prof-id" data-i18n="prof_id"></div>
+                <div class="prof-stats">
+                    <div><div class="st-num" id="stat-visits">7</div><div class="st-lbl" data-i18n="st_visits"></div></div>
+                    <div><div class="st-num" id="stat-upcoming">2</div><div class="st-lbl" data-i18n="st_upcoming"></div></div>
+                    <div><div class="st-num">5★</div><div class="st-lbl" data-i18n="st_rating"></div></div>
+                </div>
+            </div>
+            <div class="apt-list">
+                <div class="divlbl" data-i18n="upcoming_apts"></div>
+                <div id="upcoming-list"></div>
+                <div class="divlbl" style="margin-top:8px" data-i18n="past_visits"></div>
+                <div class="apt-card" style="opacity:.65"><div class="apt-dt"><div class="apt-day">5</div><div class="apt-mon" data-i18n="mon_jun"></div></div><div style="flex:1"><div class="apt-svc" data-i18n="apt_implant_fu"></div><div class="apt-doc">Dr. Ahmet Yılmaz</div><div class="apt-time">🕙 11:00</div></div><span class="sbadge sb-done" data-i18n="st_done"></span></div>
+                <div class="apt-card" style="opacity:.65"><div class="apt-dt"><div class="apt-day">12</div><div class="apt-mon" data-i18n="mon_may"></div></div><div style="flex:1"><div class="apt-svc" data-i18n="apt_tartar"></div><div class="apt-doc">Dr. Zeynep Arslan</div><div class="apt-time">🕒 15:30</div></div><span class="sbadge sb-done" data-i18n="st_done"></span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="call-fab" onclick="callClinic()">📞</div>
+    <div class="wa-fab" onclick="showWA()">💬</div>
+
+    <div class="bnav">
+        <div class="ni active" id="ni-home" onclick="nav('home')"><div class="ni-icon">🏠</div><div class="ni-lbl" data-i18n="nav_home"></div></div>
+        <div class="ni" id="ni-services" onclick="nav('services')"><div class="ni-icon">🦷</div><div class="ni-lbl" data-i18n="nav_services"></div></div>
+        <div class="ni ni-book" id="ni-book" onclick="openBooking()"><div class="ni-icon">📅</div><div class="ni-lbl" data-i18n="nav_book"></div></div>
+        <div class="ni" id="ni-doctors" onclick="nav('doctors')"><div class="ni-icon">👨‍⚕️</div><div class="ni-lbl" data-i18n="nav_doctors"></div></div>
+        <div class="ni" id="ni-profile" onclick="nav('profile')"><div class="ni-icon">👤</div><div class="ni-lbl" data-i18n="nav_profile"></div></div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeSheets()"></div>
+
+    <!-- Booking sheet -->
+    <div class="sheet" id="bmodal">
+        <div class="mhandle"></div>
+        <div class="mhdr"><div class="mttl" id="mttl"></div><div class="mclose" onclick="closeSheets()">✕</div></div>
+        <div class="mcontent" id="mcontent"></div>
+    </div>
+
+    <!-- Install guide sheet -->
+    <div class="sheet" id="imodal">
+        <div class="mhandle"></div>
+        <div class="mhdr"><div class="mttl" id="ig-ttl"></div><div class="mclose" onclick="closeSheets()">✕</div></div>
+        <div class="mcontent" id="ig-content"></div>
+    </div>
+
+    <!-- Callback request sheet -->
+    <div class="sheet" id="cbmodal">
+        <div class="mhandle"></div>
+        <div class="mhdr"><div class="mttl" id="cb-ttl"></div><div class="mclose" onclick="closeSheets()">✕</div></div>
+        <div class="mcontent" id="cb-content"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+/* ════════════ TRANSLATIONS ════════════ */
+const I18N = {
+  tr: {
+    clinic_sub:"Dental Clinic · İstanbul",
+    ib_title:"Ana ekrana ekle — ücretsiz", ib_sub:"Uygulama gibi açılır, internet gerektirmez", ib_btn:"Ekle",
+    install_done:"✅ Ana ekrana eklendi!", install_have:"✅ Uygulama zaten yüklü",
+    hero_badge:"⭐ İstanbul'un #1 Kliniği", hero_title:"Sağlıklı gülüş,<br>mutlu hayat ✨", hero_cta:"Randevu Al  →",
+    emg_ban_ttl:"🦷 Diş ağrınız mı var?", emg_ban_sub:"Hemen acil randevu alın — uygun doktoru biz buluruz",
+    qa_book:"Randevu Al", qa_services:"Hizmetler", qa_doctors:"Doktorlar", qa_whatsapp:"WhatsApp",
+    pop_services:"Popüler Hizmetler", see_all:"Tümü →", our_doctors:"Doktorlarımız",
+    reviews:"Hasta Yorumları", reviews_count:"152 yorum",
+    implant:"Diş İmplantı", veneer:"Porselen Kaplama", whitening:"Diş Beyazlatma", ortho:"Ortodonti",
+    canal:"Kanal Tedavisi", cleaning:"Diş Temizliği", zirconium:"Zirkonyum Kron", smile:"Gülüş Tasarımı",
+    emergency:"Acil / Ağrı", notsure:"Emin değilim",
+    implant_d:"Eksik dişler için kalıcı, doğal çözüm", veneer_d:"Mükemmel gülüş tasarımı, doğal görünüm",
+    whitening_d:"Profesyonel lazer beyazlatma", ortho_d:"Şeffaf plak ve metal diş teli",
+    canal_d:"Ağrısız modern kanal tedavisi", cleaning_d:"Tartar ve diş taşı temizleme",
+    zirconium_d:"En doğal seramik kaplama", smile_d:"Dijital gülüş tasarımı analizi",
+    services_title:"Hizmetlerimiz", services_sub:"Tüm tedavi seçenekleri",
+    doctors_title:"Doktorlarımız", doctors_sub:"Uzman ekibimizle tanışın",
+    spec1:"İmplantoloji & Oral Cerrahi", spec2:"Estetik Diş Hekimliği", spec3:"Ortodonti & Çocuk Diş", spec4:"Periodontoloji & Protez",
+    spec1_short:"İmplantoloji", spec2_short:"Estetik Diş", spec3_short:"Ortodonti",
+    exp1:"15 yıl deneyim · 3.200+ implant vakası", exp2:"11 yıl deneyim · 2.800+ estetik vaka",
+    exp3:"9 yıl deneyim · 1.500+ hasta", exp4:"7 yıl deneyim · 1.200+ vaka",
+    rev342:"342 yorum", rev287:"287 yorum", rev195:"195 yorum", rev158:"158 yorum",
+    avail_today:"✓ Bugün müsait", avail_tomorrow:"⏱ Yarın müsait",
+    rev_a_dt:"★★★★★ · 2 gün önce", rev_b_dt:"★★★★★ · 1 hafta önce", rev_c_dt:"★★★★★ · 2 hafta önce",
+    rev_a_txt:"\"İmplant operasyonu mükemmeldi. Dr. Yılmaz çok profesyonel, randevu almak da uygulama ile çok kolay oldu!\"",
+    rev_b_txt:"\"Porselen kaplama yaptırdım, sonuçtan çok memnunum! Uygulamadan 2 dakikada randevu aldım, harika!\"",
+    rev_c_txt:"\"Çok temiz ve modern klinik. WhatsApp hatırlatıcılar çok işe yaradı, randevumu unutmadım. Teşekkürler!\"",
+    nav_home:"Ana Sayfa", nav_services:"Hizmetler", nav_book:"Randevu", nav_doctors:"Doktorlar", nav_profile:"Profil",
+    prof_id:"Hasta No: #ASD-2847", st_visits:"Ziyaret", st_upcoming:"Yaklaşan", st_rating:"Puanım",
+    upcoming_apts:"Yaklaşan Randevular", past_visits:"Geçmiş Ziyaretler",
+    apt_checkup:"Kontrol Muayenesi", apt_implant_fu:"İmplant Takibi", apt_tartar:"Diş Taşı Temizleme",
+    st_confirmed:"Onaylı", st_pending:"Bekliyor", st_done:"Tamam",
+    mon_jun:"HAZ", mon_may:"MAY", month_long:"Haziran", month_cal:"Haziran 2026",
+    weekdays:["Pt","Sa","Ça","Pe","Cu","Ct","Pa"],
+    m_title_1:"Randevu Al", m_title_2:"Tarih & Doktor", m_title_3:"Onay", m_title_4:"Tamamlandı",
+    step1_q:"Hangi hizmeti istiyorsunuz?", emg_big:"🚨 Dişim ağrıyor — acil randevu",
+    notsure_link:"❓ Hangi hizmet gerektiğinden emin değil misiniz? Randevu alın, yönlendirelim →",
+    continue:"Devam Et →",
+    step2_date:"Tarih seçin", step2_doc:"Doktor seçin", step2_time:"Saat seçin",
+    doc_any:"İlk müsait doktor", doc_any_sub:"Size en uygun uzmanı atayalım",
+    soonest:"En yakın müsait randevu:", book_this:"Bunu seç",
+    slot_hint:"Dolu saatler seçilemez", nofree:"Bu gün için müsait saat yok, başka gün seçin",
+    step3_q:"Randevu bilgilerini onaylayın",
+    conf_service:"Hizmet", conf_doctor:"Doktor", conf_date:"Tarih", conf_time:"Saat", conf_clinic:"Klinik",
+    notebox:"📱 Onaylandıktan sonra WhatsApp üzerinden otomatik hatırlatıcı alacaksınız.",
+    dupbox:"⚠️ Bu tarih ve saatte zaten bir randevunuz var. Lütfen farklı bir saat seçin.",
+    confirm_btn:"✓ Randevuyu Onayla",
+    success_title:"Randevunuz Alındı!",
+    success_txt:"<strong>{svc}</strong><br><strong>{date}</strong> · <strong>{time}</strong><br>{doc}<br><br>📱 WhatsApp'a hatırlatıcı gönderildi.",
+    view_apts:"Randevularımı Görüntüle", back_home:"Ana sayfaya dön",
+    wa_msg:"WhatsApp bağlantısı açılıyor...\n\n(Demo — gerçek numarayı buraya bağlayacağız)",
+    contact_ttl:"Bize Ulaşın", phone_label:"Telefon", hours_label:"Çalışma saatleri", hours_val:"Her gün 09:00 – 19:00",
+    open_now:"Açık", closed_now:"Kapalı", btn_call:"Ara", btn_callback:"Beni Arayın",
+    closed_note:"🌙 Şu an kapalıyız. Online randevu alabilir ya da formu bırakın — sabah ilk iş sizi arayalım.",
+    cb_title:"Sizi Arayalım", cb_sub:"Telefonla randevu mu tercih edersiniz? Bilgilerinizi bırakın, sizi arayalım — gece bıraksanız bile sabah döneriz.",
+    cb_name:"Adınız", cb_phone:"Telefon numaranız", cb_when:"Ne zaman arayalım?",
+    cb_when_asap:"En kısa sürede", cb_when_morning:"Sabah", cb_when_afternoon:"Öğleden sonra", cb_when_evening:"Akşam",
+    cb_note:"Not (isteğe bağlı)", cb_note_ph:"Örn. diş ağrısı, acil",
+    cb_submit:"Talebi Gönder", cb_err:"Lütfen adınızı ve telefon numaranızı girin",
+    cb_success_ttl:"Talebiniz Alındı!",
+    cb_success_txt:"Teşekkürler {name}! <strong>{phone}</strong> numarasından sizi arayacağız.<br><br>📞 Tercih edilen zaman: <strong>{when}</strong>",
+    prefer_call:"📞 Telefonla mı? Sizi arayalım →",
+    ig_title:"Ana ekrana nasıl eklenir",
+    ig_ios:["Safari'de alttaki <b>Paylaş</b> ⬆️ simgesine dokunun","<b>«Ana Ekrana Ekle»</b> seçeneğini bulun","Sağ üstte <b>«Ekle»</b>'ye dokunun — bitti! 🎉"],
+    ig_android:["Tarayıcı menüsü <b>⋮</b> (sağ üst)","<b>«Ana ekrana ekle»</b> / «Uygulamayı yükle»","<b>«Yükle»</b>'ye dokunun — bitti! 🎉"]
+  },
+  ru: {
+    clinic_sub:"Стоматология · Стамбул",
+    ib_title:"Добавить на экран — бесплатно", ib_sub:"Открывается как приложение, без интернета", ib_btn:"Добавить",
+    install_done:"✅ Добавлено на главный экран!", install_have:"✅ Приложение уже установлено",
+    hero_badge:"⭐ Клиника №1 в Стамбуле", hero_title:"Здоровая улыбка,<br>счастливая жизнь ✨", hero_cta:"Записаться  →",
+    emg_ban_ttl:"🦷 Болит зуб?", emg_ban_sub:"Срочная запись — врача подберём за вас",
+    qa_book:"Записаться", qa_services:"Услуги", qa_doctors:"Врачи", qa_whatsapp:"WhatsApp",
+    pop_services:"Популярные услуги", see_all:"Все →", our_doctors:"Наши врачи",
+    reviews:"Отзывы пациентов", reviews_count:"152 отзыва",
+    implant:"Имплант зуба", veneer:"Виниры", whitening:"Отбеливание", ortho:"Ортодонтия",
+    canal:"Лечение каналов", cleaning:"Чистка зубов", zirconium:"Циркониевая коронка", smile:"Дизайн улыбки",
+    emergency:"Срочно / Боль", notsure:"Не уверен(а)",
+    implant_d:"Постоянное, естественное решение при потере зубов", veneer_d:"Идеальная улыбка, естественный вид",
+    whitening_d:"Профессиональное лазерное отбеливание", ortho_d:"Прозрачные капы и металлические брекеты",
+    canal_d:"Безболезненное современное лечение", cleaning_d:"Удаление зубного камня и налёта",
+    zirconium_d:"Самая естественная керамическая коронка", smile_d:"Цифровой анализ дизайна улыбки",
+    services_title:"Наши услуги", services_sub:"Все варианты лечения",
+    doctors_title:"Наши врачи", doctors_sub:"Познакомьтесь с нашей командой",
+    spec1:"Имплантология и хирургия", spec2:"Эстетическая стоматология", spec3:"Ортодонтия и детская", spec4:"Пародонтология и протезы",
+    spec1_short:"Имплантология", spec2_short:"Эстетика", spec3_short:"Ортодонтия",
+    exp1:"15 лет опыта · 3.200+ имплантов", exp2:"11 лет опыта · 2.800+ эстетических работ",
+    exp3:"9 лет опыта · 1.500+ пациентов", exp4:"7 лет опыта · 1.200+ случаев",
+    rev342:"342 отзыва", rev287:"287 отзывов", rev195:"195 отзывов", rev158:"158 отзывов",
+    avail_today:"✓ Свободен сегодня", avail_tomorrow:"⏱ Свободен завтра",
+    rev_a_dt:"★★★★★ · 2 дня назад", rev_b_dt:"★★★★★ · 1 неделю назад", rev_c_dt:"★★★★★ · 2 недели назад",
+    rev_a_txt:"\"Операция по имплантации прошла отлично. Доктор Йылмаз — профессионал, а записаться через приложение очень легко!\"",
+    rev_b_txt:"\"Поставила виниры, очень довольна результатом! Записалась через приложение за 2 минуты — супер!\"",
+    rev_c_txt:"\"Очень чистая и современная клиника. Напоминания в WhatsApp помогли — не забыла о визите. Спасибо!\"",
+    nav_home:"Главная", nav_services:"Услуги", nav_book:"Запись", nav_doctors:"Врачи", nav_profile:"Профиль",
+    prof_id:"Пациент №: #ASD-2847", st_visits:"Визиты", st_upcoming:"Предстоящие", st_rating:"Мой рейтинг",
+    upcoming_apts:"Предстоящие записи", past_visits:"Прошлые визиты",
+    apt_checkup:"Контрольный осмотр", apt_implant_fu:"Контроль импланта", apt_tartar:"Удаление зубного камня",
+    st_confirmed:"Подтверждено", st_pending:"Ожидает", st_done:"Готово",
+    mon_jun:"ИЮН", mon_may:"МАЙ", month_long:"июня", month_cal:"Июнь 2026",
+    weekdays:["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],
+    m_title_1:"Записаться", m_title_2:"Дата и врач", m_title_3:"Подтверждение", m_title_4:"Готово",
+    step1_q:"Какую услугу вы хотите?", emg_big:"🚨 Болит зуб — срочная запись",
+    notsure_link:"❓ Не знаете, какая услуга нужна? Запишитесь — мы подскажем →",
+    continue:"Продолжить →",
+    step2_date:"Выберите дату", step2_doc:"Выберите врача", step2_time:"Выберите время",
+    doc_any:"Любой свободный врач", doc_any_sub:"Назначим подходящего специалиста",
+    soonest:"Ближайшее свободное время:", book_this:"Выбрать",
+    slot_hint:"Занятое время выбрать нельзя", nofree:"На этот день нет свободного времени, выберите другой день",
+    step3_q:"Подтвердите данные записи",
+    conf_service:"Услуга", conf_doctor:"Врач", conf_date:"Дата", conf_time:"Время", conf_clinic:"Клиника",
+    notebox:"📱 После подтверждения вы получите автоматическое напоминание в WhatsApp.",
+    dupbox:"⚠️ У вас уже есть запись на эту дату и время. Пожалуйста, выберите другое время.",
+    confirm_btn:"✓ Подтвердить запись",
+    success_title:"Запись создана!",
+    success_txt:"<strong>{svc}</strong><br><strong>{date}</strong> · <strong>{time}</strong><br>{doc}<br><br>📱 Напоминание отправлено в WhatsApp.",
+    view_apts:"Мои записи", back_home:"Вернуться на главную",
+    wa_msg:"Открывается WhatsApp...\n\n(Демо — сюда подключим реальный номер)",
+    contact_ttl:"Связаться с нами", phone_label:"Телефон", hours_label:"Часы работы", hours_val:"Ежедневно 09:00 – 19:00",
+    open_now:"Открыто", closed_now:"Закрыто", btn_call:"Позвонить", btn_callback:"Перезвоните мне",
+    closed_note:"🌙 Сейчас закрыто. Запишитесь онлайн или оставьте заявку — перезвоним утром первым делом.",
+    cb_title:"Перезвоните мне", cb_sub:"Удобнее по телефону? Оставьте контакты — мы перезвоним. Даже если оставите заявку ночью, наберём вас утром.",
+    cb_name:"Ваше имя", cb_phone:"Ваш телефон", cb_when:"Когда перезвонить?",
+    cb_when_asap:"Как можно скорее", cb_when_morning:"Утром", cb_when_afternoon:"Днём", cb_when_evening:"Вечером",
+    cb_note:"Комментарий (необязательно)", cb_note_ph:"Напр. болит зуб, срочно",
+    cb_submit:"Отправить заявку", cb_err:"Пожалуйста, введите имя и телефон",
+    cb_success_ttl:"Заявка принята!",
+    cb_success_txt:"Спасибо, {name}! Мы перезвоним вам на <strong>{phone}</strong>.<br><br>📞 Удобное время: <strong>{when}</strong>",
+    prefer_call:"📞 Удобнее по телефону? Перезвоним вам →",
+    ig_title:"Как добавить на экран",
+    ig_ios:["Нажмите <b>«Поделиться»</b> ⬆️ внизу Safari","Найдите пункт <b>«На экран Домой»</b>","Нажмите <b>«Добавить»</b> справа вверху — готово! 🎉"],
+    ig_android:["Меню браузера <b>⋮</b> (вверху справа)","<b>«Добавить на главный экран»</b> / «Установить»","Нажмите <b>«Установить»</b> — готово! 🎉"]
+  },
+  en: {
+    clinic_sub:"Dental Clinic · Istanbul",
+    ib_title:"Add to Home Screen — free", ib_sub:"Opens like an app, works offline", ib_btn:"Add",
+    install_done:"✅ Added to home screen!", install_have:"✅ App already installed",
+    hero_badge:"⭐ Istanbul's #1 Clinic", hero_title:"Healthy smile,<br>happy life ✨", hero_cta:"Book Now  →",
+    emg_ban_ttl:"🦷 Got a toothache?", emg_ban_sub:"Book urgent care — we'll match the right doctor",
+    qa_book:"Book", qa_services:"Services", qa_doctors:"Doctors", qa_whatsapp:"WhatsApp",
+    pop_services:"Popular Services", see_all:"All →", our_doctors:"Our Doctors",
+    reviews:"Patient Reviews", reviews_count:"152 reviews",
+    implant:"Dental Implant", veneer:"Porcelain Veneers", whitening:"Teeth Whitening", ortho:"Orthodontics",
+    canal:"Root Canal", cleaning:"Teeth Cleaning", zirconium:"Zirconium Crown", smile:"Smile Design",
+    emergency:"Urgent / Pain", notsure:"Not sure",
+    implant_d:"Permanent, natural solution for missing teeth", veneer_d:"Perfect smile design, natural look",
+    whitening_d:"Professional laser whitening", ortho_d:"Clear aligners and metal braces",
+    canal_d:"Painless modern root canal", cleaning_d:"Tartar and plaque removal",
+    zirconium_d:"Most natural ceramic crown", smile_d:"Digital smile design analysis",
+    services_title:"Our Services", services_sub:"All treatment options",
+    doctors_title:"Our Doctors", doctors_sub:"Meet our expert team",
+    spec1:"Implantology & Oral Surgery", spec2:"Aesthetic Dentistry", spec3:"Orthodontics & Pediatric", spec4:"Periodontology & Prosthetics",
+    spec1_short:"Implantology", spec2_short:"Aesthetics", spec3_short:"Orthodontics",
+    exp1:"15 years exp · 3,200+ implant cases", exp2:"11 years exp · 2,800+ aesthetic cases",
+    exp3:"9 years exp · 1,500+ patients", exp4:"7 years exp · 1,200+ cases",
+    rev342:"342 reviews", rev287:"287 reviews", rev195:"195 reviews", rev158:"158 reviews",
+    avail_today:"✓ Available today", avail_tomorrow:"⏱ Available tomorrow",
+    rev_a_dt:"★★★★★ · 2 days ago", rev_b_dt:"★★★★★ · 1 week ago", rev_c_dt:"★★★★★ · 2 weeks ago",
+    rev_a_txt:"\"The implant operation was perfect. Dr. Yılmaz is very professional, and booking via the app was so easy!\"",
+    rev_b_txt:"\"I got porcelain veneers and I'm thrilled with the result! Booked in 2 minutes through the app, amazing!\"",
+    rev_c_txt:"\"Very clean and modern clinic. The WhatsApp reminders were super helpful, I didn't miss my appointment!\"",
+    nav_home:"Home", nav_services:"Services", nav_book:"Book", nav_doctors:"Doctors", nav_profile:"Profile",
+    prof_id:"Patient No: #ASD-2847", st_visits:"Visits", st_upcoming:"Upcoming", st_rating:"My rating",
+    upcoming_apts:"Upcoming Appointments", past_visits:"Past Visits",
+    apt_checkup:"Check-up Exam", apt_implant_fu:"Implant Follow-up", apt_tartar:"Tartar Removal",
+    st_confirmed:"Confirmed", st_pending:"Pending", st_done:"Done",
+    mon_jun:"JUN", mon_may:"MAY", month_long:"June", month_cal:"June 2026",
+    weekdays:["Mo","Tu","We","Th","Fr","Sa","Su"],
+    m_title_1:"Book Appointment", m_title_2:"Date & Doctor", m_title_3:"Confirmation", m_title_4:"Done",
+    step1_q:"Which service do you want?", emg_big:"🚨 Toothache — urgent appointment",
+    notsure_link:"❓ Not sure which service? Book and we'll guide you →",
+    continue:"Continue →",
+    step2_date:"Select date", step2_doc:"Select doctor", step2_time:"Select time",
+    doc_any:"First available doctor", doc_any_sub:"We'll assign the right specialist",
+    soonest:"Soonest available:", book_this:"Pick this",
+    slot_hint:"Booked times can't be selected", nofree:"No free times this day, pick another day",
+    step3_q:"Confirm appointment details",
+    conf_service:"Service", conf_doctor:"Doctor", conf_date:"Date", conf_time:"Time", conf_clinic:"Clinic",
+    notebox:"📱 After confirmation you'll receive an automatic WhatsApp reminder.",
+    dupbox:"⚠️ You already have an appointment at this date and time. Please pick another slot.",
+    confirm_btn:"✓ Confirm Appointment",
+    success_title:"Appointment Booked!",
+    success_txt:"<strong>{svc}</strong><br><strong>{date}</strong> · <strong>{time}</strong><br>{doc}<br><br>📱 A WhatsApp reminder has been sent.",
+    view_apts:"View My Appointments", back_home:"Back to home",
+    wa_msg:"Opening WhatsApp...\n\n(Demo — we'll connect the real number here)",
+    contact_ttl:"Contact Us", phone_label:"Phone", hours_label:"Working hours", hours_val:"Daily 09:00 – 19:00",
+    open_now:"Open", closed_now:"Closed", btn_call:"Call", btn_callback:"Call me back",
+    closed_note:"🌙 We're closed right now. Book online or leave a request — we'll call you first thing in the morning.",
+    cb_title:"Call Me Back", cb_sub:"Prefer to book by phone? Leave your details and we'll call you — even if you send it at night, we'll ring you in the morning.",
+    cb_name:"Your name", cb_phone:"Your phone number", cb_when:"When should we call?",
+    cb_when_asap:"As soon as possible", cb_when_morning:"Morning", cb_when_afternoon:"Afternoon", cb_when_evening:"Evening",
+    cb_note:"Note (optional)", cb_note_ph:"e.g. toothache, urgent",
+    cb_submit:"Send Request", cb_err:"Please enter your name and phone number",
+    cb_success_ttl:"Request Received!",
+    cb_success_txt:"Thanks, {name}! We'll call you back at <strong>{phone}</strong>.<br><br>📞 Preferred time: <strong>{when}</strong>",
+    prefer_call:"📞 Prefer a call? We'll ring you back →",
+    ig_title:"How to add to home screen",
+    ig_ios:["Tap <b>Share</b> ⬆️ at the bottom of Safari","Find <b>'Add to Home Screen'</b>","Tap <b>'Add'</b> at the top right — done! 🎉"],
+    ig_android:["Browser menu <b>⋮</b> (top right)","<b>'Add to Home screen'</b> / 'Install app'","Tap <b>'Install'</b> — done! 🎉"]
+  }
+};
+
+/* ════════════ i18n ════════════ */
+let LANG = localStorage.getItem('lang') || 'tr';
+function t(k){ return (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.tr[k] !== undefined ? I18N.tr[k] : k); }
+function applyLang(){
+    document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el=>{ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('on', o.dataset.l===LANG));
+    renderProfile();
+    renderContact();
+    if(document.getElementById('bmodal').classList.contains('on')) render();
+    if(document.getElementById('cbmodal').classList.contains('on')) renderCallback();
+}
+function setLang(l){ LANG=l; localStorage.setItem('lang',l); applyLang(); }
+
+/* ════════════ Data model ════════════ */
+const DOCTORS = { AY:'Dr. Ahmet Yılmaz', FK:'Dr. Fatma Koç', MO:'Dr. Mehmet Öztürk' };
+const DOC_SPEC = { AY:'spec1_short', FK:'spec2_short', MO:'spec3_short' };
+const DOC_COLOR = { AY:'#1565C0', FK:'#7C3AED', MO:'#059669' };
+const DOC_INI = { AY:'AY', FK:'FK', MO:'MÖ' };
+const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
+const TODAY = 13;
+
+/* Clinic contact / hours */
+const CLINIC_PHONE = '+90 212 555 01 23';
+const CLINIC_PHONE_RAW = '+902125550123';
+const WORK_START = 9, WORK_END = 19;
+function isOpenNow(){ const h = new Date().getHours(); return h >= WORK_START && h < WORK_END; }
+
+/* callback (reception call-me-back) requests */
+let callbackRequests = [];
+
+/* booked slots registry — prevents double-booking. key: docId|day|time */
+const booked = new Set([
+  'AY|13|09:30','AY|13|11:00','AY|13|15:00','AY|18|10:00','AY|25|10:00',
+  'FK|13|10:00','FK|13|14:00','FK|13|16:30','FK|18|14:30',
+  'MO|13|09:00','MO|13|10:30','MO|13|15:30','MO|20|11:00'
+]);
+
+/* patient's own appointments (drives profile + duplicate check) */
+let myAppointments = [
+  { svc:'whitening',   doc:'Dr. Fatma Koç',   day:18, mon:'jun', time:'14:30', status:'confirmed' },
+  { svc:'apt_checkup', doc:'Dr. Ahmet Yılmaz', day:25, mon:'jun', time:'10:00', status:'pending'  }
+];
+
+function slotTaken(docId, day, time){
+  if(docId==='any') return ['AY','FK','MO'].every(d=>booked.has(d+'|'+day+'|'+time));
+  return booked.has(docId+'|'+day+'|'+time);
+}
+function assignDoctor(day, time){
+  return ['AY','FK','MO'].find(d=>!booked.has(d+'|'+day+'|'+time)) || 'AY';
+}
+function earliestToday(){
+  for(const s of SLOTS){ if(!slotTaken('any', TODAY, s)) return s; }
+  return null;
+}
+
+/* ════════════ State ════════════ */
+let step = 1;
+let submitting = false;
+let bk = { svc:'', doc:'any', dateDay:0, time:'' };
+
+/* ── Clock ── */
+function tick(){ const n=new Date(); document.getElementById('clock').textContent=n.getHours()+':'+String(n.getMinutes()).padStart(2,'0'); }
+tick(); setInterval(tick,30000);
+
+/* ── Navigation ── */
+function nav(p){
+    document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+    document.querySelectorAll('.ni').forEach(el=>el.classList.remove('active'));
+    document.getElementById('page-'+p).classList.add('active');
+    const ni=document.getElementById('ni-'+p);
+    if(ni) ni.classList.add('active'); else document.getElementById('ni-home').classList.add('active');
+    document.querySelector('.content').scrollTop=0;
+}
+
+/* ── Sheets ── */
+function openSheet(id){ document.getElementById(id).classList.add('on'); document.getElementById('overlay').classList.add('on'); }
+function closeSheets(){ document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('on')); document.getElementById('overlay').classList.remove('on'); }
+
+/* ── Booking entry points ── */
+function openBooking(preService){
+    submitting=false;
+    if(preService){ bk={svc:preService,doc:'any',dateDay:0,time:''}; step=2; }
+    else { bk={svc:'',doc:'any',dateDay:0,time:''}; step=1; }
+    render(); openSheet('bmodal');
+}
+function openEmergency(){
+    submitting=false;
+    bk={svc:'emergency',doc:'any',dateDay:TODAY,time:''}; step=2;
+    render(); openSheet('bmodal');
+}
+function openBookingDoc(docId){
+    submitting=false;
+    bk={svc:'',doc:docId,dateDay:0,time:''}; step=1;
+    render(); openSheet('bmodal');
+}
+
+function sdot(s){ return [0,1,2].map(i=>{ let c='sdot'; if(i+1<s)c+=' done'; else if(i+1===s)c+=' act'; return `<div class="${c}"></div>`; }).join(''); }
+function fmtDate(){ return bk.dateDay ? bk.dateDay+' '+t('month_long')+' 2026' : '—'; }
+function confDoctorName(){ return bk.doc==='any' ? t('doc_any') : DOCTORS[bk.doc]; }
+
+/* ════════════ Render booking ════════════ */
+function render(){
+    const mc=document.getElementById('mcontent');
+    const mt=document.getElementById('mttl');
+
+    if(step===1){
+        mt.textContent=t('m_title_1');
+        mc.innerHTML=`
+        <div class="steps">${sdot(1)}</div>
+        <button class="emg-big" onclick="emgFromStep1()">${t('emg_big')}</button>
+        <div class="sttl">${t('step1_q')}</div>
+        <div class="opts">
+            ${[['🦷','implant'],['✨','veneer'],['💎','whitening'],['🔄','ortho'],['🩺','canal'],['🧹','cleaning']].map(([ic,key])=>`
+            <div class="opt${bk.svc===key?' sel':''}" onclick="selSvc('${key}')"><div class="opt-ic">${ic}</div><div class="opt-lbl">${t(key)}</div></div>`).join('')}
+        </div>
+        <div class="notsure-link" onclick="notSure()">${t('notsure_link')}</div>
+        <div class="prefer-call" onclick="openCallback()">${t('prefer_call')}</div>
+        <button class="mbtn${bk.svc?'':' dim'}" onclick="if(bk.svc){step=2;render()}">${t('continue')}</button>`;
+    }
+
+    else if(step===2){
+        mt.textContent=t('m_title_2');
+        const taken = bk.dateDay && bk.time && slotTaken(bk.doc, bk.dateDay, bk.time);
+        if(taken) bk.time='';
+        const soon = (bk.svc==='emergency') ? earliestToday() : null;
+
+        let timeSection='';
+        if(bk.dateDay){
+            const slotsHtml = SLOTS.map(ti=>{
+                const na = slotTaken(bk.doc, bk.dateDay, ti);
+                return `<div class="ts${na?' na':''}${bk.time===ti?' sel':''}" onclick="${na?'':'selTime(\''+ti+'\')'}">${ti}</div>`;
+            }).join('');
+            const anyFree = SLOTS.some(ti=>!slotTaken(bk.doc, bk.dateDay, ti));
+            timeSection = `<div class="sttl">${t('step2_time')}</div>` +
+                (anyFree ? `<div class="tslots">${slotsHtml}</div><div class="slot-hint">${t('slot_hint')}</div>`
+                         : `<div class="nofree">${t('nofree')}</div>`);
+        }
+
+        mc.innerHTML=`
+        <div class="steps">${sdot(2)}</div>
+        ${soon ? `<div class="soonest" onclick="pickSoonest('${soon}')">⚡ ${t('soonest')} <strong>${t('mon_jun')} ${TODAY}, ${soon}</strong> · ${t('book_this')} →</div>` : ''}
+        <div class="sttl">${t('step2_date')}</div>
+        <div class="cal">
+            <div class="cal-hdr"><div class="cal-nav">‹</div><div class="cal-mon">${t('month_cal')}</div><div class="cal-nav">›</div></div>
+            <div class="cal-grid">${t('weekdays').map(d=>`<div class="cal-dlbl">${d}</div>`).join('')}${calDays()}</div>
+        </div>
+        <div class="sttl">${t('step2_doc')}</div>
+        <div class="dsel-row any${bk.doc==='any'?' sel':''}" onclick="selDoc('any')">
+            <div class="dsel-ava" style="background:linear-gradient(135deg,#3B82F6,#1565C0)">⚡</div>
+            <div><div class="dsel-nm">${t('doc_any')}</div><div class="dsel-sp">${t('doc_any_sub')}</div></div>
+            <div style="margin-left:auto;font-size:22px;color:var(--p)">${bk.doc==='any'?'✓':''}</div>
+        </div>
+        ${['AY','FK','MO'].map(id=>`
+        <div class="dsel-row${bk.doc===id?' sel':''}" onclick="selDoc('${id}')">
+            <div class="dsel-ava" style="background:${DOC_COLOR[id]}">${DOC_INI[id]}</div>
+            <div><div class="dsel-nm">${DOCTORS[id]}</div><div class="dsel-sp">${t(DOC_SPEC[id])}</div></div>
+            <div style="margin-left:auto;font-size:22px;color:var(--p)">${bk.doc===id?'✓':''}</div>
+        </div>`).join('')}
+        ${timeSection}
+        <button class="mbtn${(bk.dateDay&&bk.time&&bk.doc)?'':' dim'}" onclick="if(bk.dateDay&&bk.time&&bk.doc){step=3;render()}">${t('continue')}</button>`;
+    }
+
+    else if(step===3){
+        mt.textContent=t('m_title_3');
+        const dup = isDuplicate();
+        mc.innerHTML=`
+        <div class="steps">${sdot(3)}</div>
+        <div class="sttl">${t('step3_q')}</div>
+        <div class="conf-box">
+            <div class="conf-row"><div class="conf-lbl">${t('conf_service')}</div><div class="conf-val">${bk.svc?t(bk.svc):'—'}</div></div>
+            <div class="conf-row"><div class="conf-lbl">${t('conf_doctor')}</div><div class="conf-val">${confDoctorName()}</div></div>
+            <div class="conf-row"><div class="conf-lbl">${t('conf_date')}</div><div class="conf-val">${fmtDate()}</div></div>
+            <div class="conf-row"><div class="conf-lbl">${t('conf_time')}</div><div class="conf-val">${bk.time||'—'}</div></div>
+            <div class="conf-row"><div class="conf-lbl">${t('conf_clinic')}</div><div class="conf-val">ArtSmile · İstanbul</div></div>
+        </div>
+        ${dup ? `<div class="dupbox">${t('dupbox')}</div>` : `<div class="notebox">${t('notebox')}</div>`}
+        <button class="mbtn${dup?' dim':''}" onclick="confirmBooking()">${t('confirm_btn')}</button>`;
+    }
+
+    else if(step===4){
+        mt.textContent=t('m_title_4');
+        const docName = bk.assignedDoc || confDoctorName();
+        const txt=t('success_txt')
+            .replace('{svc}', bk.svc?t(bk.svc):'')
+            .replace('{date}', fmtDate())
+            .replace('{time}', bk.time||'')
+            .replace('{doc}', docName);
+        mc.innerHTML=`
+        <div class="succ">
+            <div class="succ-ic">✅</div>
+            <div class="succ-ttl">${t('success_title')}</div>
+            <div class="succ-txt">${txt}</div>
+            <button class="mbtn" style="margin-top:28px" onclick="closeSheets();nav('profile')">${t('view_apts')}</button>
+            <div class="succ-alt" onclick="closeSheets()">${t('back_home')}</div>
+        </div>`;
+    }
+}
+
+/* ── Calendar ── */
+function calDays(){
+    let h=''; const total=30;
+    for(let d=1;d<=total;d++){
+        const off=d<TODAY, sel=bk.dateDay===d;
+        h+=`<div class="cal-d${off?' off':''}${d===TODAY?' tdy':''}${sel?' sel':''}" onclick="${off?'':'selDate('+d+')'}">${d}</div>`;
+    }
+    return h;
+}
+
+/* ── Selectors / flow ── */
+function selSvc(v){ bk.svc=v; render(); }
+function selTime(v){ bk.time=v; render(); }
+function selDate(d){ bk.dateDay=d; if(bk.time && slotTaken(bk.doc,d,bk.time)) bk.time=''; render(); }
+function selDoc(id){ bk.doc=id; if(bk.dateDay && bk.time && slotTaken(id,bk.dateDay,bk.time)) bk.time=''; render(); }
+function notSure(){ bk.svc='notsure'; bk.doc='any'; step=2; render(); }
+function emgFromStep1(){ bk.svc='emergency'; bk.doc='any'; bk.dateDay=TODAY; step=2; render(); }
+function pickSoonest(time){ bk.dateDay=TODAY; bk.time=time; render(); }
+
+/* ── Duplicate guard ── */
+function isDuplicate(){
+    return myAppointments.some(a=>a.day===bk.dateDay && a.time===bk.time);
+}
+
+/* ── Confirm (with double-submit + duplicate protection) ── */
+function confirmBooking(){
+    if(submitting) return;
+    if(isDuplicate()){ render(); return; }
+    submitting=true;
+    const docId = (bk.doc==='any') ? assignDoctor(bk.dateDay, bk.time) : bk.doc;
+    // lock the slot so it can never be double-booked
+    booked.add(docId+'|'+bk.dateDay+'|'+bk.time);
+    bk.assignedDoc = DOCTORS[docId];
+    myAppointments.push({ svc:bk.svc, doc:DOCTORS[docId], day:bk.dateDay, mon:'jun', time:bk.time, status:'confirmed' });
+    renderProfile();
+    step=4; render();
+}
+
+/* ── Profile render ── */
+function renderProfile(){
+    const list=document.getElementById('upcoming-list');
+    if(!list) return;
+    const sorted=[...myAppointments].sort((a,b)=>a.day-b.day);
+    list.innerHTML = sorted.map(a=>{
+        const svcLabel = t(a.svc);
+        const badge = a.status==='confirmed' ? `<span class="sbadge sb-ok">${t('st_confirmed')}</span>`
+                    : a.status==='pending'   ? `<span class="sbadge sb-pnd">${t('st_pending')}</span>`
+                    : `<span class="sbadge sb-done">${t('st_done')}</span>`;
+        return `<div class="apt-card">
+            <div class="apt-dt"><div class="apt-day">${a.day}</div><div class="apt-mon">${t('mon_'+a.mon)}</div></div>
+            <div style="flex:1"><div class="apt-svc">${svcLabel}</div><div class="apt-doc">${a.doc}</div><div class="apt-time">🕑 ${a.time}</div></div>
+            ${badge}
+        </div>`;
+    }).join('');
+    const up=document.getElementById('stat-upcoming'); if(up) up.textContent=myAppointments.length;
+}
+
+/* ── WhatsApp ── */
+function showWA(){ alert(t('wa_msg')); }
+
+/* ── Contact card ── */
+function renderContact(){
+    const el = document.getElementById('contact-card');
+    if(!el) return;
+    const open = isOpenNow();
+    el.innerHTML = `
+        <div class="cc-top">
+            <div class="cc-ttl">${t('contact_ttl')}</div>
+            <div class="cc-status ${open?'cc-open':'cc-closed'}">● ${open?t('open_now'):t('closed_now')}</div>
+        </div>
+        <div class="cc-row"><div class="cc-ic">📞</div><div><div class="cc-lbl">${t('phone_label')}</div><div class="cc-val">${CLINIC_PHONE}</div></div></div>
+        <div class="cc-row"><div class="cc-ic">🕐</div><div><div class="cc-lbl">${t('hours_label')}</div><div class="cc-val">${t('hours_val')}</div></div></div>
+        ${open ? '' : `<div class="cc-note">${t('closed_note')}</div>`}
+        <div class="cc-btns">
+            <button class="cc-btn cc-btn-call" onclick="callClinic()">📞 ${t('btn_call')}</button>
+            <button class="cc-btn cc-btn-cb" onclick="openCallback()">📲 ${t('btn_callback')}</button>
+        </div>`;
+}
+function callClinic(){ window.location.href = 'tel:' + CLINIC_PHONE_RAW; }
+
+/* ── Callback request (call me back) ── */
+let cb = { name:'', phone:'', when:'asap', note:'' };
+let cbDone = false;
+function openCallback(){
+    document.getElementById('bmodal').classList.remove('on');
+    document.getElementById('imodal').classList.remove('on');
+    cb = { name:'', phone:'', when: isOpenNow() ? 'asap' : 'morning', note:'' };
+    cbDone = false; renderCallback(); openSheet('cbmodal');
+}
+function cbWhen(w){ cb.when = w; renderCallback(); }
+function renderCallback(){
+    const c = document.getElementById('cb-content');
+    const ttl = document.getElementById('cb-ttl');
+    if(cbDone){
+        ttl.textContent = t('cb_success_ttl');
+        const txt = t('cb_success_txt')
+            .replace('{name}', cb.name)
+            .replace('{phone}', cb.phone)
+            .replace('{when}', t('cb_when_'+cb.when));
+        c.innerHTML = `
+            <div class="succ">
+                <div class="succ-ic" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)">📞</div>
+                <div class="succ-ttl">${t('cb_success_ttl')}</div>
+                <div class="succ-txt">${txt}</div>
+                <button class="mbtn" style="margin-top:26px" onclick="closeSheets()">${t('back_home')}</button>
+            </div>`;
+        return;
+    }
+    ttl.textContent = t('cb_title');
+    c.innerHTML = `
+        <div class="cb-sub">${t('cb_sub')}</div>
+        <div id="cb-err-slot"></div>
+        <div class="cb-field"><label class="cb-label">${t('cb_name')}</label>
+            <input class="cb-input" id="cb-name" value="${cb.name.replace(/"/g,'&quot;')}" oninput="cb.name=this.value"></div>
+        <div class="cb-field"><label class="cb-label">${t('cb_phone')}</label>
+            <input class="cb-input" id="cb-phone" type="tel" inputmode="tel" value="${cb.phone.replace(/"/g,'&quot;')}" oninput="cb.phone=this.value" placeholder="+90 5__ ___ __ __"></div>
+        <div class="cb-field"><label class="cb-label">${t('cb_when')}</label>
+            <div class="cb-chips">
+                ${['asap','morning','afternoon','evening'].map(w=>`<div class="cb-chip${cb.when===w?' sel':''}" onclick="cbWhen('${w}')">${t('cb_when_'+w)}</div>`).join('')}
+            </div></div>
+        <div class="cb-field"><label class="cb-label">${t('cb_note')}</label>
+            <input class="cb-input" id="cb-note" value="${cb.note.replace(/"/g,'&quot;')}" oninput="cb.note=this.value" placeholder="${t('cb_note_ph')}"></div>
+        <button class="mbtn" onclick="submitCallback()">${t('cb_submit')}</button>`;
+}
+function submitCallback(){
+    if(!cb.name.trim() || !cb.phone.trim()){
+        const slot = document.getElementById('cb-err-slot');
+        if(slot) slot.innerHTML = `<div class="cb-err">${t('cb_err')}</div>`;
+        return;
+    }
+    callbackRequests.push({ ...cb, at: new Date().toISOString() });
+    cbDone = true; renderCallback();
+}
+
+/* ── Toast ── */
+function toast(msg){
+    const el=document.getElementById('toast');
+    el.textContent=msg; el.classList.add('on');
+    setTimeout(()=>el.classList.remove('on'), 2600);
+}
+
+/* ════════════ PWA INSTALL ════════════ */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{ e.preventDefault(); deferredPrompt=e; });
+window.addEventListener('appinstalled',()=>{ deferredPrompt=null; const ib=document.getElementById('ibanner'); if(ib) ib.style.display='none'; toast(t('install_done')); });
+
+function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true; }
+function isiOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream; }
+
+async function doInstall(){
+    if(isStandalone()){ toast(t('install_have')); return; }
+    if(deferredPrompt){
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt=null;
+        if(outcome==='accepted'){ const ib=document.getElementById('ibanner'); if(ib) ib.style.display='none'; toast(t('install_done')); }
+        return;
+    }
+    // Fallback: show manual instructions (iOS Safari has no prompt API)
+    showInstallGuide();
+}
+
+function showInstallGuide(){
+    const steps = isiOS() ? t('ig_ios') : t('ig_android');
+    document.getElementById('ig-ttl').textContent = t('ig_title');
+    document.getElementById('ig-content').innerHTML =
+        steps.map((s,i)=>`<div class="ig-step"><div class="ig-num">${i+1}</div><div class="ig-txt">${s}</div></div>`).join('');
+    openSheet('imodal');
+}
+
+/* ════════════ Service Worker ════════════ */
+if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+
+/* ════════════ Init ════════════ */
+applyLang();
+renderProfile();
+// Handle manifest shortcuts: ?action=book / ?action=emergency
+(function(){
+    const a = new URLSearchParams(location.search).get('action');
+    if(a==='book') setTimeout(openBooking, 300);
+    else if(a==='emergency') setTimeout(openEmergency, 300);
+})();
+</script>
+</body>
+</html>

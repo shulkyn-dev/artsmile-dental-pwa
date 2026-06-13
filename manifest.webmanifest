@@ -1,0 +1,30 @@
+{
+  "name": "ArtSmile Dental Clinic",
+  "short_name": "ArtSmile",
+  "description": "Diş kliniği · online randevu / online appointment booking",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D1B4E",
+  "theme_color": "#0D1B4E",
+  "lang": "tr",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Randevu Al / Book",
+      "short_name": "Randevu",
+      "url": "./index.html?action=book"
+    },
+    {
+      "name": "Acil / Emergency",
+      "short_name": "Acil",
+      "url": "./index.html?action=emergency"
+    }
+  ]
+}

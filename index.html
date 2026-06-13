@@ -298,9 +298,14 @@
         .prefer-call { text-align:center; font-size:13px; color:var(--green); font-weight:800; cursor:pointer; padding:8px; margin-bottom:4px; }
 
         /* Install guide sheet */
-        .ig-step { display:flex; gap:14px; align-items:flex-start; margin-bottom:18px; }
+        .ig-step { display:flex; gap:14px; align-items:center; margin-bottom:16px; }
         .ig-num { width:30px; height:30px; border-radius:50%; background:var(--p); color:#fff; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .ig-txt { font-size:14px; color:var(--text); line-height:1.5; padding-top:3px; }
+        .ig-txt { font-size:14px; color:var(--text); line-height:1.45; }
+        .ig-intro { font-size:15px; font-weight:800; color:var(--text); margin-bottom:18px; }
+        .ig-vis { width:48px; height:48px; border-radius:13px; background:var(--p-lite); display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; }
+        .ig-vis-num { position:absolute; top:-6px; left:-6px; width:22px; height:22px; border-radius:50%; background:var(--p); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+        .ig-hint { background:#ECFDF5; border:1px solid #A7F3D0; border-radius:12px; padding:12px 14px; font-size:13px; color:#065F46; font-weight:700; margin-top:4px; display:flex; align-items:center; gap:8px; }
+        .ig-android-note { font-size:12px; color:var(--muted); margin-top:14px; line-height:1.5; text-align:center; }
         .toast { position:absolute; left:50%; bottom:100px; transform:translateX(-50%) translateY(20px); background:var(--p-dark); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px; font-weight:700; z-index:300; opacity:0; transition:all .3s; white-space:nowrap; pointer-events:none; }
         .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
     </style>
@@ -574,9 +579,13 @@ const I18N = {
     cb_success_ttl:"Talebiniz Alındı!",
     cb_success_txt:"Teşekkürler {name}! <strong>{phone}</strong> numarasından sizi arayacağız.<br><br>📞 Tercih edilen zaman: <strong>{when}</strong>",
     prefer_call:"📞 Telefonla mı? Sizi arayalım →",
-    ig_title:"Ana ekrana nasıl eklenir",
-    ig_ios:["Safari'de alttaki <b>Paylaş</b> ⬆️ simgesine dokunun","<b>«Ana Ekrana Ekle»</b> seçeneğini bulun","Sağ üstte <b>«Ekle»</b>'ye dokunun — bitti! 🎉"],
-    ig_android:["Tarayıcı menüsü <b>⋮</b> (sağ üst)","<b>«Ana ekrana ekle»</b> / «Uygulamayı yükle»","<b>«Yükle»</b>'ye dokunun — bitti! 🎉"]
+    ig_title:"Ana ekrana ekle",
+    ig_ios_intro:"Sadece 2 adım:",
+    ig_ios:["Aşağıdaki <b>Paylaş</b> butonuna dokunun","<b>«Ana Ekrana Ekle» → «Ekle»</b> — bitti! 🎉"],
+    ig_ios_where:"Paylaş butonu Safari'nin alt çubuğundadır",
+    ig_android_intro:"Tarayıcı menüsünden:",
+    ig_android:["Sağ üstteki <b>⋮</b> menüsüne dokunun","<b>«Ana ekrana ekle» / «Yükle»</b> — bitti! 🎉"],
+    ig_android_note:"Çoğu telefonda butona basınca tek dokunuşla otomatik kurulur."
   },
   ru: {
     clinic_sub:"Стоматология · Стамбул",
@@ -641,9 +650,13 @@ const I18N = {
     cb_success_ttl:"Заявка принята!",
     cb_success_txt:"Спасибо, {name}! Мы перезвоним вам на <strong>{phone}</strong>.<br><br>📞 Удобное время: <strong>{when}</strong>",
     prefer_call:"📞 Удобнее по телефону? Перезвоним вам →",
-    ig_title:"Как добавить на экран",
-    ig_ios:["Нажмите <b>«Поделиться»</b> ⬆️ внизу Safari","Найдите пункт <b>«На экран Домой»</b>","Нажмите <b>«Добавить»</b> справа вверху — готово! 🎉"],
-    ig_android:["Меню браузера <b>⋮</b> (вверху справа)","<b>«Добавить на главный экран»</b> / «Установить»","Нажмите <b>«Установить»</b> — готово! 🎉"]
+    ig_title:"Добавить на экран",
+    ig_ios_intro:"Всего 2 шага:",
+    ig_ios:["Нажмите кнопку <b>«Поделиться»</b> внизу","<b>«На экран Домой» → «Добавить»</b> — готово! 🎉"],
+    ig_ios_where:"Кнопка «Поделиться» — внизу экрана Safari",
+    ig_android_intro:"Через меню браузера:",
+    ig_android:["Нажмите <b>⋮</b> вверху справа","<b>«Добавить на главный экран» / «Установить»</b> — готово! 🎉"],
+    ig_android_note:"На большинстве телефонов установка идёт в один тап прямо по кнопке."
   },
   en: {
     clinic_sub:"Dental Clinic · Istanbul",
@@ -708,9 +721,13 @@ const I18N = {
     cb_success_ttl:"Request Received!",
     cb_success_txt:"Thanks, {name}! We'll call you back at <strong>{phone}</strong>.<br><br>📞 Preferred time: <strong>{when}</strong>",
     prefer_call:"📞 Prefer a call? We'll ring you back →",
-    ig_title:"How to add to home screen",
-    ig_ios:["Tap <b>Share</b> ⬆️ at the bottom of Safari","Find <b>'Add to Home Screen'</b>","Tap <b>'Add'</b> at the top right — done! 🎉"],
-    ig_android:["Browser menu <b>⋮</b> (top right)","<b>'Add to Home screen'</b> / 'Install app'","Tap <b>'Install'</b> — done! 🎉"]
+    ig_title:"Add to home screen",
+    ig_ios_intro:"Just 2 steps:",
+    ig_ios:["Tap the <b>Share</b> button at the bottom","<b>'Add to Home Screen' → 'Add'</b> — done! 🎉"],
+    ig_ios_where:"The Share button is at the bottom of Safari",
+    ig_android_intro:"From the browser menu:",
+    ig_android:["Tap the <b>⋮</b> menu (top right)","<b>'Add to Home screen' / 'Install'</b> — done! 🎉"],
+    ig_android_note:"On most phones it installs in one tap right from the button."
   }
 };
 
@@ -1077,10 +1094,26 @@ async function doInstall(){
 }
 
 function showInstallGuide(){
-    const steps = isiOS() ? t('ig_ios') : t('ig_android');
+    const ios = isiOS();
+    const steps = ios ? t('ig_ios') : t('ig_android');
+    const intro = ios ? t('ig_ios_intro') : t('ig_android_intro');
     document.getElementById('ig-ttl').textContent = t('ig_title');
-    document.getElementById('ig-content').innerHTML =
-        steps.map((s,i)=>`<div class="ig-step"><div class="ig-num">${i+1}</div><div class="ig-txt">${s}</div></div>`).join('');
+
+    const shareIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 11v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>`;
+    const plusIcon  = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 9v6M9 12h6"/></svg>`;
+    const menuIcon  = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#1565C0"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>`;
+    const icons = ios ? [shareIcon, plusIcon] : [menuIcon, plusIcon];
+
+    let html = `<div class="ig-intro">${intro}</div>`;
+    html += steps.map((s,i)=>`
+        <div class="ig-step">
+            <div class="ig-vis"><div class="ig-vis-num">${i+1}</div>${icons[i]||''}</div>
+            <div class="ig-txt">${s}</div>
+        </div>`).join('');
+    if(ios) html += `<div class="ig-hint">👇 ${t('ig_ios_where')}</div>`;
+    else    html += `<div class="ig-android-note">${t('ig_android_note')}</div>`;
+
+    document.getElementById('ig-content').innerHTML = html;
     openSheet('imodal');
 }
 

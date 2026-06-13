@@ -622,6 +622,7 @@ const I18N = {
     ig_ios_intro:"Sadece 2 adım:",
     ig_ios:["Aşağıdaki <b>Paylaş</b> butonuna dokunun","<b>«Ana Ekrana Ekle» → «Ekle»</b> — bitti! 🎉"],
     ig_ios_where:"Paylaş butonu Safari'nin alt çubuğundadır",
+    ig_ios_note:"Butonu göremiyor musunuz? Listeyi aşağı kaydırın. Bu sayfayı Instagram/WhatsApp'tan açtıysanız önce «Safari'de Aç» deyin — bu özellik yalnızca Safari'de çalışır.",
     ig_android_intro:"Tarayıcı menüsünden:",
     ig_android:["Sağ üstteki <b>⋮</b> menüsüne dokunun","<b>«Ana ekrana ekle» / «Yükle»</b> — bitti! 🎉"],
     ig_android_note:"Çoğu telefonda butona basınca tek dokunuşla otomatik kurulur.",
@@ -704,6 +705,7 @@ const I18N = {
     ig_ios_intro:"Всего 2 шага:",
     ig_ios:["Нажмите кнопку <b>«Поделиться»</b> внизу","<b>«На экран Домой» → «Добавить»</b> — готово! 🎉"],
     ig_ios_where:"Кнопка «Поделиться» — внизу экрана Safari",
+    ig_ios_note:"Не видите кнопку? Прокрутите список вниз. Если открыли страницу из Instagram/WhatsApp — сначала «Открыть в Safari»: эта функция работает только в Safari.",
     ig_android_intro:"Через меню браузера:",
     ig_android:["Нажмите <b>⋮</b> вверху справа","<b>«Добавить на главный экран» / «Установить»</b> — готово! 🎉"],
     ig_android_note:"На большинстве телефонов установка идёт в один тап прямо по кнопке.",
@@ -786,6 +788,7 @@ const I18N = {
     ig_ios_intro:"Just 2 steps:",
     ig_ios:["Tap the <b>Share</b> button at the bottom","<b>'Add to Home Screen' → 'Add'</b> — done! 🎉"],
     ig_ios_where:"The Share button is at the bottom of Safari",
+    ig_ios_note:"Don't see the button? Scroll the list down. If you opened this from Instagram/WhatsApp, choose 'Open in Safari' first — this feature only works in Safari.",
     ig_android_intro:"From the browser menu:",
     ig_android:["Tap the <b>⋮</b> menu (top right)","<b>'Add to Home screen' / 'Install'</b> — done! 🎉"],
     ig_android_note:"On most phones it installs in one tap right from the button.",
@@ -1244,7 +1247,7 @@ function showInstallGuide(){
             <div class="ig-vis"><div class="ig-vis-num">${i+1}</div>${icons[i]||''}</div>
             <div class="ig-txt">${s}</div>
         </div>`).join('');
-    if(ios) html += `<div class="ig-hint">👇 ${t('ig_ios_where')}</div>`;
+    if(ios) html += `<div class="ig-hint">👇 ${t('ig_ios_where')}</div><div class="ig-android-note" style="text-align:left">ℹ️ ${t('ig_ios_note')}</div>`;
     else    html += `<div class="ig-android-note">${t('ig_android_note')}</div>`;
 
     document.getElementById('ig-content').innerHTML = html;

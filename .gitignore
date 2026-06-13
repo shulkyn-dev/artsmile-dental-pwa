@@ -1,6 +1,12 @@
 # Build / deploy output (генерируется из исходников)
 public/
 
+# Cloudflare wrangler кэш (служебное, не публиковать)
+.wrangler/
+
+# Служебные временные файлы
+_commitmsg.txt
+
 # Python артефакты
 __pycache__/
 *.pyc

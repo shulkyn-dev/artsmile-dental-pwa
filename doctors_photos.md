@@ -1,10 +1,10 @@
 # 📸 Промты для генерации фото врачей (единый стиль)
 
-Цель: 4 портрета в ОДНОМ стиле, чтобы выглядели как одна команда клиники.
+Цель: 6 портретов в ОДНОМ стиле (3 мужчины + 3 женщины), чтобы выглядели как одна команда клиники.
 Подходит для Midjourney, DALL·E, Leonardo, Flux и т.п.
 
 ## ⚙️ Как добиться единого стиля (важно!)
-1. Генерь все 4 **подряд, в одной сессии**, не меняя описание стиля (блок ниже одинаковый у всех).
+1. Генерь все 6 **подряд, в одной сессии**, не меняя описание стиля (блок ниже одинаковый у всех).
 2. Один и тот же **фон, свет, халат, ракурс** — это уже прописано в промтах.
 3. В Midjourney добавь в конце у всех одинаковый флаг: `--ar 1:1 --style raw`. Для ещё большей
    схожести можно зафиксировать сид: добавь `--seed 1234` (одинаковый у всех четырёх).
@@ -57,6 +57,26 @@ professional and kind, dark hair tied back in a low neat bun, minimal makeup, co
 smile, wearing a clean white dental coat, soft light blue-grey studio background, bright soft
 diffused studio lighting, looking at the camera, shoulders-up portrait, sharp focus, 85mm lens,
 1:1 square, same lighting and background as the other clinic doctors
+--ar 1:1 --style raw
+```
+
+## 5) Dr. Elif Demir — эндодонт (лечение каналов)  →  `dr-elif-demir.jpg`
+```
+Photorealistic professional medical headshot of a Turkish female dentist, around 35 years old,
+calm and precise, dark wavy hair past the shoulders, soft natural makeup, gentle reassuring smile,
+wearing a clean white dental coat, soft light blue-grey studio background, bright soft diffused
+studio lighting, looking at the camera, shoulders-up portrait, sharp focus, 85mm lens, 1:1 square,
+same lighting and background as the other clinic doctors
+--ar 1:1 --style raw
+```
+
+## 6) Dr. Can Kaya — протезист / реставрация  →  `dr-can-kaya.jpg`
+```
+Photorealistic professional medical headshot of a Turkish male dentist, around 42 years old,
+experienced and friendly, short dark hair with a neat short beard, warm confident smile, wearing
+a clean white dental coat, soft light blue-grey studio background, bright soft diffused studio
+lighting, looking at the camera, shoulders-up portrait, sharp focus, 85mm lens, 1:1 square,
+same lighting and background as the other clinic doctors
 --ar 1:1 --style raw
 ```
 

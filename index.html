@@ -1573,6 +1573,14 @@ if('serviceWorker' in navigator){
 }
 
 /* ════════════ Init ════════════ */
+// Фикс высоты: window.innerHeight всегда даёт реальный видимый экран,
+// в отличие от dvh/vh которые могут расходиться на iOS standalone.
+function fixAppHeight(){
+    document.getElementById('app').style.height = window.innerHeight + 'px';
+}
+window.addEventListener('resize', fixAppHeight);
+fixAppHeight();
+
 // Запущено через установленную иконку? Прячем браузерную плашку и фейковый статус-бар.
 if(isStandalone()){
     document.documentElement.classList.add('standalone');

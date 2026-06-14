@@ -2,6 +2,7 @@
   "name": "ArtSmile Dental Clinic",
   "short_name": "ArtSmile",
   "description": "Diş kliniği · online randevu / online appointment booking",
+  "id": "/index.html",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

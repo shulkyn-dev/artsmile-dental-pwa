@@ -530,7 +530,6 @@
 
     </div>
 
-    <div class="call-fab" onclick="callClinic()">📞</div>
     <div class="wa-fab" onclick="showWA()">💬</div>
 
     <div class="bnav">
@@ -638,6 +637,7 @@ const I18N = {
     view_apts:"Randevularımı Görüntüle", back_home:"Ana sayfaya dön",
     wa_msg:"WhatsApp bağlantısı açılıyor...\n\n(Demo — gerçek numarayı buraya bağlayacağız)",
     contact_ttl:"Bize Ulaşın", phone_label:"Telefon", hours_label:"Çalışma saatleri", hours_val:"Her gün 09:00 – 19:00",
+    addr_label:"Adres", addr_val:"Teşvikiye Cd. No:12, Şişli/İstanbul",
     open_now:"Açık", closed_now:"Kapalı", btn_call:"Ara", btn_callback:"Beni Arayın",
     closed_note:"🌙 Şu an kapalıyız. Online randevu alabilir ya da formu bırakın — sabah ilk iş sizi arayalım.",
     cb_title:"Sizi Arayalım", cb_sub:"Telefonla randevu mu tercih edersiniz? Bilgilerinizi bırakın, sizi arayalım — gece bıraksanız bile sabah döneriz.",
@@ -721,6 +721,7 @@ const I18N = {
     view_apts:"Мои записи", back_home:"Вернуться на главную",
     wa_msg:"Открывается WhatsApp...\n\n(Демо — сюда подключим реальный номер)",
     contact_ttl:"Связаться с нами", phone_label:"Телефон", hours_label:"Часы работы", hours_val:"Ежедневно 09:00 – 19:00",
+    addr_label:"Адрес", addr_val:"Teşvikiye Cd. 12, Шишли/Стамбул",
     open_now:"Открыто", closed_now:"Закрыто", btn_call:"Позвонить", btn_callback:"Перезвоните мне",
     closed_note:"🌙 Сейчас закрыто. Запишитесь онлайн или оставьте заявку — перезвоним утром первым делом.",
     cb_title:"Перезвоните мне", cb_sub:"Удобнее по телефону? Оставьте контакты — мы перезвоним. Даже если оставите заявку ночью, наберём вас утром.",
@@ -804,6 +805,7 @@ const I18N = {
     view_apts:"View My Appointments", back_home:"Back to home",
     wa_msg:"Opening WhatsApp...\n\n(Demo — we'll connect the real number here)",
     contact_ttl:"Contact Us", phone_label:"Phone", hours_label:"Working hours", hours_val:"Daily 09:00 – 19:00",
+    addr_label:"Address", addr_val:"Teşvikiye Cd. 12, Şişli/Istanbul",
     open_now:"Open", closed_now:"Closed", btn_call:"Call", btn_callback:"Call me back",
     closed_note:"🌙 We're closed right now. Book online or leave a request — we'll call you first thing in the morning.",
     cb_title:"Call Me Back", cb_sub:"Prefer to book by phone? Leave your details and we'll call you — even if you send it at night, we'll ring you in the morning.",
@@ -876,6 +878,7 @@ const TODAY = 13;
 /* Clinic contact / hours */
 const CLINIC_PHONE = '+90 212 555 01 23';
 const CLINIC_PHONE_RAW = '+902125550123';
+const CLINIC_MAP_URL = 'https://www.google.com/maps/search/?api=1&query=41.0510,28.9935';
 const WORK_START = 9, WORK_END = 19;
 function isOpenNow(){ const h = new Date().getHours(); return h >= WORK_START && h < WORK_END; }
 
@@ -1122,6 +1125,7 @@ function renderContact(){
         </div>
         <div class="cc-row"><div class="cc-ic">📞</div><div><div class="cc-lbl">${t('phone_label')}</div><div class="cc-val">${CLINIC_PHONE}</div></div></div>
         <div class="cc-row"><div class="cc-ic">🕐</div><div><div class="cc-lbl">${t('hours_label')}</div><div class="cc-val">${t('hours_val')}</div></div></div>
+        <div class="cc-row" style="cursor:pointer" onclick="openMap()"><div class="cc-ic">📍</div><div style="flex:1"><div class="cc-lbl">${t('addr_label')}</div><div class="cc-val">${t('addr_val')}</div></div><div style="color:var(--p);font-weight:800;font-size:18px">→</div></div>
         ${open ? '' : `<div class="cc-note">${t('closed_note')}</div>`}
         <div class="cc-btns">
             <button class="cc-btn cc-btn-call" onclick="callClinic()">📞 ${t('btn_call')}</button>
@@ -1129,6 +1133,7 @@ function renderContact(){
         </div>`;
 }
 function callClinic(){ window.location.href = 'tel:' + CLINIC_PHONE_RAW; }
+function openMap(){ window.open(CLINIC_MAP_URL, '_blank'); }
 
 /* ── Callback request (call me back) ── */
 let cb = { name:'', phone:'', when:'asap', note:'' };
@@ -1298,7 +1303,16 @@ function showInstallGuide(){
 
 /* ════════════ Service Worker ════════════ */
 if('serviceWorker' in navigator){
-    window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+    window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('sw.js').then((reg)=>{
+            reg.update();
+            // Когда новый SW берёт управление — один раз перезагружаем на свежую версию.
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+                if(refreshing) return; refreshing = true; window.location.reload();
+            });
+        }).catch(()=>{});
+    });
 }
 
 /* ════════════ Init ════════════ */

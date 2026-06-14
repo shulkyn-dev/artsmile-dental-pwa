@@ -239,6 +239,7 @@
         .opt-ic  { font-size:28px; margin-bottom:8px; }
         .opt-lbl { font-size:13px; font-weight:700; color:var(--text); }
         .notsure-link { text-align:center; font-size:13px; color:var(--p); font-weight:700; cursor:pointer; padding:10px; margin-bottom:6px; }
+        .spec-note { font-size:12px; color:var(--p); background:var(--p-lite); border-radius:10px; padding:9px 12px; margin-bottom:12px; line-height:1.45; font-weight:600; }
 
         .cal { background:var(--bg); border-radius:var(--r); padding:16px; margin-bottom:16px; }
         .cal-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
@@ -603,7 +604,8 @@ const I18N = {
     services_title:"Hizmetlerimiz", services_sub:"Tüm tedavi seçenekleri",
     doctors_title:"Doktorlarımız", doctors_sub:"Uzman ekibimizle tanışın",
     spec1:"İmplantoloji & Oral Cerrahi", spec2:"Estetik Diş Hekimliği", spec3:"Ortodonti & Çocuk Diş", spec4:"Periodontoloji & Protez",
-    spec1_short:"İmplantoloji", spec2_short:"Estetik Diş", spec3_short:"Ortodonti",
+    spec1_short:"İmplantoloji", spec2_short:"Estetik Diş", spec3_short:"Ortodonti", spec4_short:"Periodontoloji",
+    spec_note:"Bu hizmeti yalnızca uzman doktorlar yapar — sadece onlar gösterilir.",
     exp1:"15 yıl deneyim · 3.200+ implant vakası", exp2:"11 yıl deneyim · 2.800+ estetik vaka",
     exp3:"9 yıl deneyim · 1.500+ hasta", exp4:"7 yıl deneyim · 1.200+ vaka",
     rev342:"342 yorum", rev287:"287 yorum", rev195:"195 yorum", rev158:"158 yorum",
@@ -687,7 +689,8 @@ const I18N = {
     services_title:"Наши услуги", services_sub:"Все варианты лечения",
     doctors_title:"Наши врачи", doctors_sub:"Познакомьтесь с нашей командой",
     spec1:"Имплантология и хирургия", spec2:"Эстетическая стоматология", spec3:"Ортодонтия и детская", spec4:"Пародонтология и протезы",
-    spec1_short:"Имплантология", spec2_short:"Эстетика", spec3_short:"Ортодонтия",
+    spec1_short:"Имплантология", spec2_short:"Эстетика", spec3_short:"Ортодонтия", spec4_short:"Пародонтология",
+    spec_note:"Эту услугу выполняют только профильные врачи — показаны только они.",
     exp1:"15 лет опыта · 3.200+ имплантов", exp2:"11 лет опыта · 2.800+ эстетических работ",
     exp3:"9 лет опыта · 1.500+ пациентов", exp4:"7 лет опыта · 1.200+ случаев",
     rev342:"342 отзыва", rev287:"287 отзывов", rev195:"195 отзывов", rev158:"158 отзывов",
@@ -771,7 +774,8 @@ const I18N = {
     services_title:"Our Services", services_sub:"All treatment options",
     doctors_title:"Our Doctors", doctors_sub:"Meet our expert team",
     spec1:"Implantology & Oral Surgery", spec2:"Aesthetic Dentistry", spec3:"Orthodontics & Pediatric", spec4:"Periodontology & Prosthetics",
-    spec1_short:"Implantology", spec2_short:"Aesthetics", spec3_short:"Orthodontics",
+    spec1_short:"Implantology", spec2_short:"Aesthetics", spec3_short:"Orthodontics", spec4_short:"Periodontology",
+    spec_note:"Only specialists perform this service — only they are shown.",
     exp1:"15 years exp · 3,200+ implant cases", exp2:"11 years exp · 2,800+ aesthetic cases",
     exp3:"9 years exp · 1,500+ patients", exp4:"7 years exp · 1,200+ cases",
     rev342:"342 reviews", rev287:"287 reviews", rev195:"195 reviews", rev158:"158 reviews",
@@ -868,10 +872,25 @@ function applyTheme(){
 function toggleTheme(){ THEME = (THEME==='dark') ? 'light' : 'dark'; localStorage.setItem('theme', THEME); applyTheme(); }
 
 /* ════════════ Data model ════════════ */
-const DOCTORS = { AY:'Dr. Ahmet Yılmaz', FK:'Dr. Fatma Koç', MO:'Dr. Mehmet Öztürk' };
-const DOC_SPEC = { AY:'spec1_short', FK:'spec2_short', MO:'spec3_short' };
-const DOC_COLOR = { AY:'#1565C0', FK:'#7C3AED', MO:'#059669' };
-const DOC_INI = { AY:'AY', FK:'FK', MO:'MÖ' };
+const DOCTORS = { AY:'Dr. Ahmet Yılmaz', FK:'Dr. Fatma Koç', MO:'Dr. Mehmet Öztürk', ZA:'Dr. Zeynep Arslan' };
+const DOC_SPEC = { AY:'spec1_short', FK:'spec2_short', MO:'spec3_short', ZA:'spec4_short' };
+const DOC_COLOR = { AY:'#1565C0', FK:'#7C3AED', MO:'#059669', ZA:'#DC2626' };
+const DOC_INI = { AY:'AY', FK:'FK', MO:'MÖ', ZA:'ZA' };
+
+/* Услуга → профильные врачи. Врач без специализации НЕ может оказывать услугу. */
+const SERVICE_DOCTORS = {
+    implant:   ['AY'],              // İmplantoloji & Oral Cerrahi
+    canal:     ['AY'],              // Endodonti / cerrahi
+    veneer:    ['FK'],              // Estetik Diş Hekimliği
+    whitening: ['FK'],              // Estetik
+    smile:     ['FK'],              // Estetik (gülüş tasarımı)
+    ortho:     ['MO'],              // Ortodonti
+    cleaning:  ['ZA'],              // Periodontoloji
+    zirconium: ['ZA', 'FK'],        // Protez + estetik
+    emergency: ['AY', 'FK', 'MO', 'ZA'],
+    notsure:   ['AY', 'FK', 'MO', 'ZA']
+};
+function eligibleDoctors(){ return SERVICE_DOCTORS[bk.svc] || ['AY','FK','MO','ZA']; }
 const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
 const TODAY = 13;
 
@@ -889,7 +908,8 @@ let callbackRequests = [];
 const booked = new Set([
   'AY|13|09:30','AY|13|11:00','AY|13|15:00','AY|18|10:00','AY|25|10:00',
   'FK|13|10:00','FK|13|14:00','FK|13|16:30','FK|18|14:30',
-  'MO|13|09:00','MO|13|10:30','MO|13|15:30','MO|20|11:00'
+  'MO|13|09:00','MO|13|10:30','MO|13|15:30','MO|20|11:00',
+  'ZA|13|09:30','ZA|13|14:00','ZA|18|11:00'
 ]);
 
 /* patient's own appointments (drives profile + duplicate check) */
@@ -899,11 +919,12 @@ let myAppointments = [
 ];
 
 function slotTaken(docId, day, time){
-  if(docId==='any') return ['AY','FK','MO'].every(d=>booked.has(d+'|'+day+'|'+time));
+  if(docId==='any') return eligibleDoctors().every(d=>booked.has(d+'|'+day+'|'+time));
   return booked.has(docId+'|'+day+'|'+time);
 }
 function assignDoctor(day, time){
-  return ['AY','FK','MO'].find(d=>!booked.has(d+'|'+day+'|'+time)) || 'AY';
+  const elig = eligibleDoctors();
+  return elig.find(d=>!booked.has(d+'|'+day+'|'+time)) || elig[0];
 }
 function earliestToday(){
   for(const s of SLOTS){ if(!slotTaken('any', TODAY, s)) return s; }
@@ -979,6 +1000,9 @@ function render(){
         mt.textContent=t('m_title_2');
         const taken = bk.dateDay && bk.time && slotTaken(bk.doc, bk.dateDay, bk.time);
         if(taken) bk.time='';
+        // Выбранный врач должен быть профильным для услуги — иначе сбрасываем на «любой профильный»
+        const elig = eligibleDoctors();
+        if(bk.doc!=='any' && !elig.includes(bk.doc)) bk.doc='any';
         const soon = (bk.svc==='emergency') ? earliestToday() : null;
 
         let timeSection='';
@@ -1002,12 +1026,13 @@ function render(){
             <div class="cal-grid">${t('weekdays').map(d=>`<div class="cal-dlbl">${d}</div>`).join('')}${calDays()}</div>
         </div>
         <div class="sttl">${t('step2_doc')}</div>
+        ${bk.svc && bk.svc!=='emergency' && bk.svc!=='notsure' ? `<div class="spec-note">🩺 ${t('spec_note')}</div>` : ''}
         <div class="dsel-row any${bk.doc==='any'?' sel':''}" onclick="selDoc('any')">
             <div class="dsel-ava" style="background:linear-gradient(135deg,#3B82F6,#1565C0)">⚡</div>
             <div><div class="dsel-nm">${t('doc_any')}</div><div class="dsel-sp">${t('doc_any_sub')}</div></div>
             <div style="margin-left:auto;font-size:22px;color:var(--p)">${bk.doc==='any'?'✓':''}</div>
         </div>
-        ${['AY','FK','MO'].map(id=>`
+        ${elig.map(id=>`
         <div class="dsel-row${bk.doc===id?' sel':''}" onclick="selDoc('${id}')">
             <div class="dsel-ava" style="background:${DOC_COLOR[id]}">${DOC_INI[id]}</div>
             <div><div class="dsel-nm">${DOCTORS[id]}</div><div class="dsel-sp">${t(DOC_SPEC[id])}</div></div>

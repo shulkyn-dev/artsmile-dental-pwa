@@ -172,6 +172,30 @@
         .rev-txt  { font-size:12px; color:var(--muted); line-height:1.55; }
         .reviews-scroll { display:flex; gap:10px; overflow-x:auto; padding:2px 12px 14px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
         .reviews-scroll::-webkit-scrollbar { display:none; }
+        /* Компактные отзывы (вертикально, раскрытие по клику) */
+        .reviews-list { display:flex; flex-direction:column; gap:10px; padding:0 12px 14px; }
+        .reviews-list .rev-card { min-width:0; width:100%; cursor:pointer; }
+        .rev-chev { margin-left:auto; color:var(--muted); font-size:13px; transition:transform .25s; align-self:flex-start; }
+        .rev-card.rev-open .rev-chev { transform:rotate(180deg); }
+        .reviews-list .rev-txt { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .reviews-list .rev-card.rev-open .rev-txt { -webkit-line-clamp:unset; }
+        /* Раскрывающаяся карточка врача */
+        .doc-chev { margin-left:auto; align-self:center; color:var(--muted); font-size:14px; transition:transform .25s; flex-shrink:0; }
+        .doc-row.expanded .doc-chev { transform:rotate(180deg); }
+        .doc-expand { max-height:0; overflow:hidden; transition:max-height .35s ease, margin-top .2s; }
+        .doc-expand.open { max-height:720px; margin-top:8px; background:var(--card); border-radius:var(--r); box-shadow:var(--sh); }
+        .doc-exp-inner { padding:16px; }
+        .doc-exp-sec { margin-bottom:14px; }
+        .doc-exp-sec:last-of-type { margin-bottom:0; }
+        .doc-exp-lbl { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px; }
+        .doc-exp-bio { font-size:13px; color:var(--text); line-height:1.55; }
+        .doc-svc-chips { display:flex; flex-wrap:wrap; gap:6px; }
+        .doc-svc-chip { font-size:12px; font-weight:700; color:var(--p); background:var(--p-lite); padding:5px 11px; border-radius:20px; }
+        .doc-exp-review { background:var(--bg); border-radius:12px; padding:12px 14px; }
+        .doc-exp-rev-top { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+        .doc-exp-rev-n { font-size:13px; font-weight:700; color:var(--text); }
+        .doc-exp-rev-txt { font-size:12px; color:var(--muted); line-height:1.5; }
+        .doc-book-btn { width:100%; margin-top:14px; padding:13px; border:none; border-radius:12px; background:linear-gradient(135deg,var(--p),var(--p-dark)); color:#fff; font-weight:800; font-size:14px; cursor:pointer; }
 
         .phdr { background:var(--p-dark); color:#fff; padding:16px 20px 20px; }
         .phdr-t { font-size:22px; font-weight:800; }
@@ -463,10 +487,10 @@
             <div class="sec">
                 <div class="sec-hdr"><div class="sec-ttl" data-i18n="reviews"></div><div class="sec-lnk" data-i18n="reviews_count"></div></div>
             </div>
-            <div class="reviews-scroll">
-                <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#1565C0">M</div><div><div class="rev-nm">Mehmet K.</div><div class="rev-dt" data-i18n="rev_a_dt"></div></div></div><div class="rev-txt" data-i18n="rev_a_txt"></div></div>
-                <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#7C3AED">A</div><div><div class="rev-nm">Ayşe D.</div><div class="rev-dt" data-i18n="rev_b_dt"></div></div></div><div class="rev-txt" data-i18n="rev_b_txt"></div></div>
-                <div class="rev-card"><div class="rev-hdr"><div class="rev-ava" style="background:#DC2626">S</div><div><div class="rev-nm">Selin T.</div><div class="rev-dt" data-i18n="rev_c_dt"></div></div></div><div class="rev-txt" data-i18n="rev_c_txt"></div></div>
+            <div class="reviews-list">
+                <div class="rev-card" onclick="this.classList.toggle('rev-open')"><div class="rev-hdr"><div class="rev-ava" style="background:#1565C0">M</div><div style="flex:1;min-width:0"><div class="rev-nm">Mehmet K.</div><div class="rev-dt" data-i18n="rev_a_dt"></div></div><div class="rev-chev">▾</div></div><div class="rev-txt" data-i18n="rev_a_txt"></div></div>
+                <div class="rev-card" onclick="this.classList.toggle('rev-open')"><div class="rev-hdr"><div class="rev-ava" style="background:#7C3AED">A</div><div style="flex:1;min-width:0"><div class="rev-nm">Ayşe D.</div><div class="rev-dt" data-i18n="rev_b_dt"></div></div><div class="rev-chev">▾</div></div><div class="rev-txt" data-i18n="rev_b_txt"></div></div>
+                <div class="rev-card" onclick="this.classList.toggle('rev-open')"><div class="rev-hdr"><div class="rev-ava" style="background:#DC2626">S</div><div style="flex:1;min-width:0"><div class="rev-nm">Selin T.</div><div class="rev-dt" data-i18n="rev_c_dt"></div></div><div class="rev-chev">▾</div></div><div class="rev-txt" data-i18n="rev_c_txt"></div></div>
             </div>
             <button class="add-review-btn" data-i18n="rv_open" onclick="openReview()"></button>
             <div style="height:10px"></div>
@@ -490,32 +514,7 @@
         <!-- DOCTORS -->
         <div class="page" id="page-doctors">
             <div class="phdr"><div class="phdr-t" data-i18n="doctors_title"></div><div class="phdr-s" data-i18n="doctors_sub"></div></div>
-            <div class="doc-list">
-                <div class="doc-row" onclick="openBookingDoc('AY')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)"><img class="ava-img" src="images/dr-ahmet-yilmaz.jpg" onerror="this.remove()" alt="">AY</div>
-                    <div><div class="doc-row-nm">Dr. Ahmet Yılmaz</div><div class="doc-row-sp" data-i18n="spec1"></div><div class="doc-row-exp" data-i18n="exp1"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">5.0 · <span data-i18n="rev342"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
-                </div>
-                <div class="doc-row" onclick="openBookingDoc('FK')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)"><img class="ava-img" src="images/dr-fatma-koc.jpg" onerror="this.remove()" alt="">FK</div>
-                    <div><div class="doc-row-nm">Dr. Fatma Koç</div><div class="doc-row-sp" data-i18n="spec2"></div><div class="doc-row-exp" data-i18n="exp2"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev287"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
-                </div>
-                <div class="doc-row" onclick="openBookingDoc('MO')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#059669,#065F46)"><img class="ava-img" src="images/dr-mehmet-ozturk.jpg" onerror="this.remove()" alt="">MÖ</div>
-                    <div><div class="doc-row-nm">Dr. Mehmet Öztürk</div><div class="doc-row-sp" data-i18n="spec3"></div><div class="doc-row-exp" data-i18n="exp3"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.8 · <span data-i18n="rev195"></span></span></div><span class="avail avail-o" data-i18n="avail_tomorrow"></span></div>
-                </div>
-                <div class="doc-row" onclick="openBookingDoc('ZA')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#DC2626,#991B1B)"><img class="ava-img" src="images/dr-zeynep-arslan.jpg" onerror="this.remove()" alt="">ZA</div>
-                    <div><div class="doc-row-nm">Dr. Zeynep Arslan</div><div class="doc-row-sp" data-i18n="spec4"></div><div class="doc-row-exp" data-i18n="exp4"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev158"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
-                </div>
-                <div class="doc-row" onclick="openBookingDoc('ED')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#0D9488,#065F46)"><img class="ava-img" src="images/dr-elif-demir.jpg" onerror="this.remove()" alt="">ED</div>
-                    <div><div class="doc-row-nm">Dr. Elif Demir</div><div class="doc-row-sp" data-i18n="spec5"></div><div class="doc-row-exp" data-i18n="exp5"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev210"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
-                </div>
-                <div class="doc-row" onclick="openBookingDoc('CK')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#EA580C,#9A3412)"><img class="ava-img" src="images/dr-can-kaya.jpg" onerror="this.remove()" alt="">CK</div>
-                    <div><div class="doc-row-nm">Dr. Can Kaya</div><div class="doc-row-sp" data-i18n="spec6"></div><div class="doc-row-exp" data-i18n="exp6"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.8 · <span data-i18n="rev176"></span></span></div><span class="avail avail-o" data-i18n="avail_tomorrow"></span></div>
-                </div>
-            </div>
+            <div class="doc-list" id="doc-list"></div>
         </div>
 
         <!-- PROFILE -->
@@ -619,6 +618,19 @@ const I18N = {
     exp1:"15 yıl deneyim · 3.200+ implant vakası", exp2:"11 yıl deneyim · 2.800+ estetik vaka",
     exp3:"9 yıl deneyim · 1.500+ hasta", exp4:"7 yıl deneyim · 1.200+ vaka", exp5:"10 yıl deneyim · 2.000+ kanal tedavisi", exp6:"13 yıl deneyim · 2.500+ protez vakası",
     rev342:"342 yorum", rev287:"287 yorum", rev195:"195 yorum", rev158:"158 yorum", rev210:"210 yorum", rev176:"176 yorum",
+    about_label:"Hakkında", services_label:"Yaptığı işlemler", doc_reviews_label:"Hasta yorumu", book_with:"Bu doktora randevu al",
+    bio_AY:"15 yıldır implantoloji ve ağız cerrahisi alanında çalışıyorum. Hastalarımın konforu ve kalıcı sonuçlar önceliğimdir.",
+    bio_FK:"Gülüş tasarımı ve estetik diş hekimliği uzmanıyım. Doğal, kişiye özel gülüşler tasarlamayı seviyorum.",
+    bio_MO:"Ortodonti ve çocuk diş hekimliğinde 9 yıllık deneyimim var. Şeffaf plak tedavilerinde uzmanım.",
+    bio_ZA:"Diş eti sağlığı ve periodontoloji uzmanlık alanım. Ağrısız ve titiz tedaviye önem veririm.",
+    bio_ED:"Kanal tedavisinde uzmanım. Modern tekniklerle ağrısız, çoğu zaman tek seansta tedavi sunarım.",
+    bio_CK:"Protez ve restorasyon uzmanıyım. Zirkonyum ve porselen ile doğal görünümlü çözümler üretirim.",
+    drv_AY:"İmplant operasyonu çok başarılı geçti, hiç ağrı duymadım. Teşekkürler!",
+    drv_FK:"Yeni gülüşüme bayıldım, çok doğal görünüyor!",
+    drv_MO:"Şeffaf plak tedavim harika ilerliyor, çok memnunum.",
+    drv_ZA:"Diş eti tedavim ağrısızdı, çok nazik bir doktor.",
+    drv_ED:"Kanal tedavisini tek seansta bitirdik, hiç korkmadım.",
+    drv_CK:"Zirkonyum kronlarım gerçek dişlerimden farksız!",
     avail_today:"✓ Bugün müsait", avail_tomorrow:"⏱ Yarın müsait",
     rev_a_dt:"★★★★★ · 2 gün önce", rev_b_dt:"★★★★★ · 1 hafta önce", rev_c_dt:"★★★★★ · 2 hafta önce",
     rev_a_txt:"\"İmplant operasyonu mükemmeldi. Dr. Yılmaz çok profesyonel, randevu almak da uygulama ile çok kolay oldu!\"",
@@ -704,6 +716,19 @@ const I18N = {
     exp1:"15 лет опыта · 3.200+ имплантов", exp2:"11 лет опыта · 2.800+ эстетических работ",
     exp3:"9 лет опыта · 1.500+ пациентов", exp4:"7 лет опыта · 1.200+ случаев", exp5:"10 лет опыта · 2.000+ лечений каналов", exp6:"13 лет опыта · 2.500+ протезов",
     rev342:"342 отзыва", rev287:"287 отзывов", rev195:"195 отзывов", rev158:"158 отзывов", rev210:"210 отзывов", rev176:"176 отзывов",
+    about_label:"О враче", services_label:"Услуги", doc_reviews_label:"Отзыв пациента", book_with:"Записаться к врачу",
+    bio_AY:"15 лет работаю в имплантологии и хирургии. Комфорт пациента и долговечный результат — мой приоритет.",
+    bio_FK:"Специалист по дизайну улыбки и эстетике. Люблю создавать естественные, индивидуальные улыбки.",
+    bio_MO:"9 лет в ортодонтии и детской стоматологии. Специализируюсь на лечении прозрачными капами.",
+    bio_ZA:"Моя специализация — здоровье дёсен и пародонтология. Ценю безболезненное и тщательное лечение.",
+    bio_ED:"Специалист по лечению каналов. Современные методики — безболезненно и часто за один визит.",
+    bio_CK:"Специалист по протезированию и реставрации. Цирконий и фарфор — естественный вид.",
+    drv_AY:"Имплантация прошла отлично, совсем без боли. Спасибо!",
+    drv_FK:"В восторге от новой улыбки, выглядит очень естественно!",
+    drv_MO:"Лечение капами идёт отлично, очень доволен.",
+    drv_ZA:"Лечение дёсен прошло безболезненно, очень деликатный врач.",
+    drv_ED:"Каналы вылечили за один визит, совсем не страшно.",
+    drv_CK:"Циркониевые коронки не отличить от своих зубов!",
     avail_today:"✓ Свободен сегодня", avail_tomorrow:"⏱ Свободен завтра",
     rev_a_dt:"★★★★★ · 2 дня назад", rev_b_dt:"★★★★★ · 1 неделю назад", rev_c_dt:"★★★★★ · 2 недели назад",
     rev_a_txt:"\"Операция по имплантации прошла отлично. Доктор Йылмаз — профессионал, а записаться через приложение очень легко!\"",
@@ -789,6 +814,19 @@ const I18N = {
     exp1:"15 years exp · 3,200+ implant cases", exp2:"11 years exp · 2,800+ aesthetic cases",
     exp3:"9 years exp · 1,500+ patients", exp4:"7 years exp · 1,200+ cases", exp5:"10 years exp · 2,000+ root canals", exp6:"13 years exp · 2,500+ prosthetic cases",
     rev342:"342 reviews", rev287:"287 reviews", rev195:"195 reviews", rev158:"158 reviews", rev210:"210 reviews", rev176:"176 reviews",
+    about_label:"About", services_label:"Services", doc_reviews_label:"Patient review", book_with:"Book this doctor",
+    bio_AY:"I've worked in implantology and oral surgery for 15 years. Patient comfort and lasting results are my priority.",
+    bio_FK:"I specialize in smile design and aesthetic dentistry. I love crafting natural, personalized smiles.",
+    bio_MO:"9 years in orthodontics and pediatric dentistry. I specialize in clear aligner treatments.",
+    bio_ZA:"Gum health and periodontology are my specialty. I value painless, meticulous treatment.",
+    bio_ED:"I specialize in root canal treatment — painless and often in a single visit with modern techniques.",
+    bio_CK:"I specialize in prosthodontics and restoration — natural-looking solutions with zirconium and porcelain.",
+    drv_AY:"The implant surgery went perfectly, no pain at all. Thank you!",
+    drv_FK:"I love my new smile, it looks so natural!",
+    drv_MO:"My clear aligner treatment is going great, very happy.",
+    drv_ZA:"My gum treatment was painless, a very gentle doctor.",
+    drv_ED:"Root canal done in one visit, wasn't scary at all.",
+    drv_CK:"My zirconium crowns are indistinguishable from real teeth!",
     avail_today:"✓ Available today", avail_tomorrow:"⏱ Available tomorrow",
     rev_a_dt:"★★★★★ · 2 days ago", rev_b_dt:"★★★★★ · 1 week ago", rev_c_dt:"★★★★★ · 2 weeks ago",
     rev_a_txt:"\"The implant operation was perfect. Dr. Yılmaz is very professional, and booking via the app was so easy!\"",
@@ -862,6 +900,7 @@ function applyLang(){
     document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('on', o.dataset.l===LANG));
     renderProfile();
     renderContact();
+    renderDoctors();
     if(document.getElementById('bmodal').classList.contains('on')) render();
     if(document.getElementById('cbmodal').classList.contains('on')) renderCallback();
     if(document.getElementById('ntmodal').classList.contains('on')) renderNotifications();
@@ -912,6 +951,71 @@ const DOC_PHOTO = {
     CK: 'images/dr-can-kaya.jpg'
 };
 function avatarImg(id){ return DOC_PHOTO[id] ? `<img class="ava-img" src="${DOC_PHOTO[id]}" onerror="this.remove()" alt="">` : ''; }
+
+/* Метаданные для страницы «Врачи» (рендерится из JS, карточки раскрываются) */
+const DOC_ORDER = ['AY','FK','MO','ZA','ED','CK'];
+const DOC_META = {
+    AY:{grad:'#1565C0,#0D1B4E', spec:'spec1', exp:'exp1', rate:'5.0', revk:'rev342', avail:'g'},
+    FK:{grad:'#7C3AED,#5B21B6', spec:'spec2', exp:'exp2', rate:'4.9', revk:'rev287', avail:'g'},
+    MO:{grad:'#059669,#065F46', spec:'spec3', exp:'exp3', rate:'4.8', revk:'rev195', avail:'o'},
+    ZA:{grad:'#DC2626,#991B1B', spec:'spec4', exp:'exp4', rate:'4.9', revk:'rev158', avail:'g'},
+    ED:{grad:'#0D9488,#065F46', spec:'spec5', exp:'exp5', rate:'4.9', revk:'rev210', avail:'g'},
+    CK:{grad:'#EA580C,#9A3412', spec:'spec6', exp:'exp6', rate:'4.8', revk:'rev176', avail:'o'}
+};
+const DOC_REVIEW = {
+    AY:{n:'Mehmet K.', k:'drv_AY'}, FK:{n:'Selin T.', k:'drv_FK'}, MO:{n:'Burak A.', k:'drv_MO'},
+    ZA:{n:'Elif Ş.', k:'drv_ZA'},   ED:{n:'Deniz Y.', k:'drv_ED'}, CK:{n:'Murat B.', k:'drv_CK'}
+};
+function servicesOf(id){
+    return Object.keys(SERVICE_DOCTORS).filter(s => !['emergency','notsure'].includes(s) && SERVICE_DOCTORS[s].includes(id));
+}
+let openDoc = null;
+function renderDoctors(){
+    const list = document.getElementById('doc-list');
+    if(!list) return;
+    list.innerHTML = DOC_ORDER.map(id=>{
+        const m = DOC_META[id];
+        return `<div class="doc-block">
+            <div class="doc-row" id="row-${id}" onclick="toggleDoc('${id}')">
+                <div class="doc-row-ava" style="background:linear-gradient(135deg,${m.grad})">${avatarImg(id)}${DOC_INI[id]}</div>
+                <div style="flex:1;min-width:0">
+                    <div class="doc-row-nm">${DOCTORS[id]}</div>
+                    <div class="doc-row-sp">${t(m.spec)}</div>
+                    <div class="doc-row-exp">${t(m.exp)}</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">${m.rate} · ${t(m.revk)}</span></div>
+                    <span class="avail avail-${m.avail}">${m.avail==='g'?t('avail_today'):t('avail_tomorrow')}</span>
+                </div>
+                <div class="doc-chev">▾</div>
+            </div>
+            <div class="doc-expand" id="exp-${id}"></div>
+        </div>`;
+    }).join('');
+    if(openDoc){ const ex=document.getElementById('exp-'+openDoc); if(ex){ ex.innerHTML=docExpandHTML(openDoc); ex.classList.add('open'); const r=document.getElementById('row-'+openDoc); if(r) r.classList.add('expanded'); } }
+}
+function docExpandHTML(id){
+    const chips = servicesOf(id).map(s=>`<span class="doc-svc-chip">${t(s)}</span>`).join('');
+    const r = DOC_REVIEW[id];
+    return `<div class="doc-exp-inner">
+        <div class="doc-exp-sec"><div class="doc-exp-lbl">${t('about_label')}</div><div class="doc-exp-bio">${t('bio_'+id)}</div></div>
+        <div class="doc-exp-sec"><div class="doc-exp-lbl">${t('services_label')}</div><div class="doc-svc-chips">${chips}</div></div>
+        <div class="doc-exp-sec"><div class="doc-exp-lbl">${t('doc_reviews_label')}</div>
+            <div class="doc-exp-review"><div class="doc-exp-rev-top"><span class="doc-exp-rev-n">${r.n}</span><span class="stars" style="font-size:11px">★★★★★</span></div><div class="doc-exp-rev-txt">${t(r.k)}</div></div>
+        </div>
+        <button class="doc-book-btn" onclick="event.stopPropagation();openBookingDoc('${id}')">${t('book_with')}</button>
+    </div>`;
+}
+function toggleDoc(id){
+    const ex = document.getElementById('exp-'+id);
+    const wasOpen = ex.classList.contains('open');
+    document.querySelectorAll('.doc-expand').forEach(e=>{ e.classList.remove('open'); e.innerHTML=''; });
+    document.querySelectorAll('.doc-row').forEach(r=>r.classList.remove('expanded'));
+    if(!wasOpen){
+        ex.innerHTML = docExpandHTML(id);
+        ex.classList.add('open');
+        document.getElementById('row-'+id).classList.add('expanded');
+        openDoc = id;
+    } else openDoc = null;
+}
 const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
 const TODAY = 13;
 
@@ -1373,6 +1477,7 @@ if(isStandalone()){
 applyTheme();
 applyLang();
 renderProfile();
+renderDoctors();
 // Handle manifest shortcuts: ?action=book / ?action=emergency
 (function(){
     const a = new URLSearchParams(location.search).get('action');

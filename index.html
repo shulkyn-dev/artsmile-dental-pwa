@@ -55,6 +55,17 @@
         html[data-theme="dark"] .dsel-row.any { background:#13203A; }
         html[data-theme="dark"] .mbtn-google { background:#F1F5F9; color:#1a1a1a; }
 
+        /* ── Установленное приложение (standalone): прячем браузерные элементы, учитываем вырез/часы iPhone ── */
+        html.standalone #ibanner,
+        html.standalone .sbar { display:none !important; }
+        html.standalone .hdr  { padding-top: calc(env(safe-area-inset-top) + 12px); }
+        html.standalone .bnav { padding-bottom: calc(env(safe-area-inset-bottom) + 10px); }
+        @media (display-mode: standalone) {
+            #ibanner, .sbar { display:none !important; }
+            .hdr  { padding-top: calc(env(safe-area-inset-top) + 12px); }
+            .bnav { padding-bottom: calc(env(safe-area-inset-bottom) + 10px); }
+        }
+
         html, body {
             width:100%; height:100%;
             overflow:hidden;
@@ -1291,6 +1302,12 @@ if('serviceWorker' in navigator){
 }
 
 /* ════════════ Init ════════════ */
+// Запущено через установленную иконку? Прячем браузерную плашку и фейковый статус-бар.
+if(isStandalone()){
+    document.documentElement.classList.add('standalone');
+    const ib = document.getElementById('ibanner');
+    if(ib) ib.style.display = 'none';
+}
 applyTheme();
 applyLang();
 renderProfile();

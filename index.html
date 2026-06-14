@@ -157,7 +157,9 @@
         .svc-pr   { font-size:12px; font-weight:700; color:var(--p); }
 
         .doc-card { background:var(--card); border-radius:var(--r); padding:16px; min-width:152px; flex-shrink:0; cursor:pointer; box-shadow:var(--sh); text-align:center; }
-        .doc-ava { width:66px; height:66px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#fff; }
+        .doc-ava { width:66px; height:66px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:#fff; position:relative; overflow:hidden; }
+        .doc-ava, .doc-row-ava, .dsel-ava { position:relative; overflow:hidden; }
+        .ava-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
         .doc-nm   { font-size:13px; font-weight:800; color:var(--text); margin-bottom:3px; }
         .doc-sp   { font-size:11px; color:var(--muted); margin-bottom:7px; }
         .stars    { color:#F59E0B; font-size:12px; }
@@ -452,9 +454,9 @@
             <div class="sec">
                 <div class="sec-hdr"><div class="sec-ttl" data-i18n="our_doctors"></div><div class="sec-lnk" data-i18n="see_all" onclick="nav('doctors')"></div></div>
                 <div class="scroll-row">
-                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)">A</div><div class="doc-nm">Dr. Ahmet Yılmaz</div><div class="doc-sp" data-i18n="spec1_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">5.0</span></div></div>
-                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">F</div><div class="doc-nm">Dr. Fatma Koç</div><div class="doc-sp" data-i18n="spec2_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">4.9</span></div></div>
-                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#059669,#065F46)">M</div><div class="doc-nm">Dr. Mehmet Öz</div><div class="doc-sp" data-i18n="spec3_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">4.8</span></div></div>
+                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)"><img class="ava-img" src="images/dr-ahmet-yilmaz.jpg" onerror="this.remove()" alt="">A</div><div class="doc-nm">Dr. Ahmet Yılmaz</div><div class="doc-sp" data-i18n="spec1_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">5.0</span></div></div>
+                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)"><img class="ava-img" src="images/dr-fatma-koc.jpg" onerror="this.remove()" alt="">F</div><div class="doc-nm">Dr. Fatma Koç</div><div class="doc-sp" data-i18n="spec2_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">4.9</span></div></div>
+                    <div class="doc-card"><div class="doc-ava" style="background:linear-gradient(135deg,#059669,#065F46)"><img class="ava-img" src="images/dr-mehmet-ozturk.jpg" onerror="this.remove()" alt="">M</div><div class="doc-nm">Dr. Mehmet Öz</div><div class="doc-sp" data-i18n="spec3_short"></div><div class="stars">★★★★★ <span style="color:var(--muted)">4.8</span></div></div>
                 </div>
             </div>
 
@@ -490,19 +492,19 @@
             <div class="phdr"><div class="phdr-t" data-i18n="doctors_title"></div><div class="phdr-s" data-i18n="doctors_sub"></div></div>
             <div class="doc-list">
                 <div class="doc-row" onclick="openBookingDoc('AY')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)">AY</div>
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#1565C0,#0D1B4E)"><img class="ava-img" src="images/dr-ahmet-yilmaz.jpg" onerror="this.remove()" alt="">AY</div>
                     <div><div class="doc-row-nm">Dr. Ahmet Yılmaz</div><div class="doc-row-sp" data-i18n="spec1"></div><div class="doc-row-exp" data-i18n="exp1"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">5.0 · <span data-i18n="rev342"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
                 </div>
                 <div class="doc-row" onclick="openBookingDoc('FK')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">FK</div>
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)"><img class="ava-img" src="images/dr-fatma-koc.jpg" onerror="this.remove()" alt="">FK</div>
                     <div><div class="doc-row-nm">Dr. Fatma Koç</div><div class="doc-row-sp" data-i18n="spec2"></div><div class="doc-row-exp" data-i18n="exp2"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev287"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
                 </div>
                 <div class="doc-row" onclick="openBookingDoc('MO')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#059669,#065F46)">MÖ</div>
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#059669,#065F46)"><img class="ava-img" src="images/dr-mehmet-ozturk.jpg" onerror="this.remove()" alt="">MÖ</div>
                     <div><div class="doc-row-nm">Dr. Mehmet Öztürk</div><div class="doc-row-sp" data-i18n="spec3"></div><div class="doc-row-exp" data-i18n="exp3"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.8 · <span data-i18n="rev195"></span></span></div><span class="avail avail-o" data-i18n="avail_tomorrow"></span></div>
                 </div>
                 <div class="doc-row" onclick="openBookingDoc('ZA')">
-                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#DC2626,#991B1B)">ZA</div>
+                    <div class="doc-row-ava" style="background:linear-gradient(135deg,#DC2626,#991B1B)"><img class="ava-img" src="images/dr-zeynep-arslan.jpg" onerror="this.remove()" alt="">ZA</div>
                     <div><div class="doc-row-nm">Dr. Zeynep Arslan</div><div class="doc-row-sp" data-i18n="spec4"></div><div class="doc-row-exp" data-i18n="exp4"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="stars">★★★★★</span><span style="font-size:12px;color:var(--muted)">4.9 · <span data-i18n="rev158"></span></span></div><span class="avail avail-g" data-i18n="avail_today"></span></div>
                 </div>
             </div>
@@ -891,6 +893,15 @@ const SERVICE_DOCTORS = {
     notsure:   ['AY', 'FK', 'MO', 'ZA']
 };
 function eligibleDoctors(){ return SERVICE_DOCTORS[bk.svc] || ['AY','FK','MO','ZA']; }
+
+/* Фото врачей. Положи файлы в images/ — появятся сами. Нет файла → показываются инициалы. */
+const DOC_PHOTO = {
+    AY: 'images/dr-ahmet-yilmaz.jpg',
+    FK: 'images/dr-fatma-koc.jpg',
+    MO: 'images/dr-mehmet-ozturk.jpg',
+    ZA: 'images/dr-zeynep-arslan.jpg'
+};
+function avatarImg(id){ return DOC_PHOTO[id] ? `<img class="ava-img" src="${DOC_PHOTO[id]}" onerror="this.remove()" alt="">` : ''; }
 const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
 const TODAY = 13;
 
@@ -1034,7 +1045,7 @@ function render(){
         </div>
         ${elig.map(id=>`
         <div class="dsel-row${bk.doc===id?' sel':''}" onclick="selDoc('${id}')">
-            <div class="dsel-ava" style="background:${DOC_COLOR[id]}">${DOC_INI[id]}</div>
+            <div class="dsel-ava" style="background:${DOC_COLOR[id]}">${avatarImg(id)}${DOC_INI[id]}</div>
             <div><div class="dsel-nm">${DOCTORS[id]}</div><div class="dsel-sp">${t(DOC_SPEC[id])}</div></div>
             <div style="margin-left:auto;font-size:22px;color:var(--p)">${bk.doc===id?'✓':''}</div>
         </div>`).join('')}

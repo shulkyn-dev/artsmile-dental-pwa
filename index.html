@@ -143,6 +143,21 @@
         .emg-sub { font-size:11px; color:#BE123C; opacity:.8; }
         .emg-arr { color:var(--red); font-weight:800; font-size:18px; }
 
+        /* ── Service detail sheet ─── */
+        .mclose-abs { position:absolute; top:14px; right:16px; width:30px; height:30px; background:rgba(0,0,0,.08); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; z-index:2; color:var(--text); }
+        .svcdet-hero { padding:32px 20px 20px; text-align:center; border-radius:0; }
+        .svcdet-hero-ic { font-size:52px; margin-bottom:10px; }
+        .svcdet-hero-nm { font-size:20px; font-weight:800; color:#fff; margin-bottom:6px; }
+        .svcdet-hero-pr { display:inline-block; background:rgba(255,255,255,.22); color:#fff; font-size:13px; font-weight:700; padding:4px 14px; border-radius:20px; }
+        .svcdet-body { padding:20px 18px 24px; }
+        .svcdet-tagline { font-size:14px; color:var(--muted); font-style:italic; margin-bottom:20px; line-height:1.5; }
+        .svcdet-sec-lbl { font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+        .svcdet-info { font-size:14px; color:var(--text); line-height:1.7; margin-bottom:18px; }
+        .svcdet-pills { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:22px; }
+        .svcdet-pill { background:var(--p-lite); color:var(--p); font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px; }
+        .svcdet-cta { width:100%; background:var(--p); color:#fff; border:none; border-radius:14px; padding:15px; font-size:15px; font-weight:800; cursor:pointer; letter-spacing:-.2px; }
+        html[data-theme="dark"] .mclose-abs { background:rgba(255,255,255,.12); }
+
         /* ── Quick Actions ─── */
         .qa-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 12px 14px; }
         .qa { background:var(--card); border-radius:15px; padding:14px 6px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; box-shadow:var(--sh); transition:transform .12s; }
@@ -447,14 +462,6 @@
                 <div class="hero-emoji">🦷</div>
             </div>
 
-            <div class="emg-ban" onclick="openEmergency()">
-                <div class="emg-ic">🚨</div>
-                <div class="emg-txt">
-                    <div class="emg-ttl" data-i18n="emg_ban_ttl"></div>
-                    <div class="emg-sub" data-i18n="emg_ban_sub"></div>
-                </div>
-                <div class="emg-arr">→</div>
-            </div>
 
             <div class="qa-grid">
                 <div class="qa" onclick="openBooking()"><div class="qa-ic" style="background:#EEF2FF">📅</div><div class="qa-lbl" data-i18n="qa_book"></div></div>
@@ -468,10 +475,10 @@
             <div class="sec">
                 <div class="sec-hdr"><div class="sec-ttl" data-i18n="pop_services"></div><div class="sec-lnk" data-i18n="see_all" onclick="nav('services')"></div></div>
                 <div class="scroll-row">
-                    <div class="svc-card" onclick="openBooking('implant')"><div class="svc-ic">🦷</div><div class="svc-name" data-i18n="implant"></div><div class="svc-pr">₺3.500+</div></div>
-                    <div class="svc-card" onclick="openBooking('veneer')"><div class="svc-ic">✨</div><div class="svc-name" data-i18n="veneer"></div><div class="svc-pr">₺2.800+</div></div>
-                    <div class="svc-card" onclick="openBooking('whitening')"><div class="svc-ic">💎</div><div class="svc-name" data-i18n="whitening"></div><div class="svc-pr">₺850+</div></div>
-                    <div class="svc-card" onclick="openBooking('ortho')"><div class="svc-ic">🔄</div><div class="svc-name" data-i18n="ortho"></div><div class="svc-pr">₺5.500+</div></div>
+                    <div class="svc-card" onclick="openSvcDetail('implant')"><div class="svc-ic">🦷</div><div class="svc-name" data-i18n="implant"></div><div class="svc-pr">₺3.500+</div></div>
+                    <div class="svc-card" onclick="openSvcDetail('veneer')"><div class="svc-ic">✨</div><div class="svc-name" data-i18n="veneer"></div><div class="svc-pr">₺2.800+</div></div>
+                    <div class="svc-card" onclick="openSvcDetail('whitening')"><div class="svc-ic">💎</div><div class="svc-name" data-i18n="whitening"></div><div class="svc-pr">₺850+</div></div>
+                    <div class="svc-card" onclick="openSvcDetail('ortho')"><div class="svc-ic">🔄</div><div class="svc-name" data-i18n="ortho"></div><div class="svc-pr">₺5.500+</div></div>
                 </div>
             </div>
 
@@ -587,6 +594,13 @@
         <div class="mcontent" id="rv-content"></div>
     </div>
 
+    <!-- Service detail sheet -->
+    <div class="sheet" id="svcdetmodal">
+        <div class="mhandle"></div>
+        <div class="mclose-abs" onclick="closeSheets()">✕</div>
+        <div class="mcontent" id="svcdet-content" style="padding:0"></div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
 </div>
@@ -684,6 +698,15 @@ const I18N = {
     ig_desktop_intro:"Chrome menüsünden (3 adım):",
     ig_desktop:["Sağ üstteki <b>⋮</b> menüsüne tıklayın","<b>«Diğer araçlar»</b> → <b>«Kısayol oluştur»</b>","<b>«Ayrı pencerede aç»</b> kutusunu işaretlemeyin → «Oluştur» — bitti! 🎉"],
     ig_desktop_note:"Kısayol masaüstünüze eklenir ve siteyi normal tarayıcı sekmesinde açar.",
+    svc_about:"Prosedür Hakkında", svc_materials:"Kullanılan Malzemeler", svc_book_cta:"Bu Tedaviye Randevu Al →",
+    implant_info:"İsviçre Straumann ve Alman Camlog titanyum implantlar kullanıyoruz — 25+ yıl ömür. Kemikle kaynaşma (3 ay) sonrası porselen ya da zirkonyum kron yerleştirilir. Lokal anestezi ile ağrısız işlem; 2 seansta tamamlanır.",
+    implant_mats:"Straumann (İsviçre) · Camlog (Almanya) · Zirkonyum kron · E.max seramik",
+    veneer_info:"0,3 mm ultra ince e.max pres seramiği kullanıyoruz — doğal diş görünümü ve ışık geçirgenliği. Aşındırma gerektirmez, geri döndürülebilir işlem. 2 seansta mükemmel gülüş: ölçü + yapıştırma.",
+    veneer_mats:"Japon E.max Press · IPS Empress seramik · UV dayanımlı adeziv",
+    whitening_info:"ZOOM 3 lazer sistemiyle 45 dakikada 6–8 ton beyazlatma. Özel desensitize jel mine hassasiyetini engeller. Sonuç 2–3 yıl kalıcı. Aktif çürük varsa önce tedavi uygulanır.",
+    whitening_mats:"Philips ZOOM 3 lazer · Desensitize koruyucu jel · Ağız koruyucu",
+    ortho_info:"Invisalign şeffaf plaklar ya da metal / seramik braket. Tedavi öncesi 3D dijital simülasyon ile sonucu görürsünüz. Haftalık ilerleme takibi. Süre: 6–24 ay, karmaşıklığa göre. İlk seansta röntgen ve analiz dahildir.",
+    ortho_mats:"Invisalign (ABD) · 3M Clarity braket · Dijital 3D tarama",
     notif_title:"Bildirimler",
     notif_1_t:"Randevunuz yaklaşıyor", notif_1_s:"Dr. Fatma Koç · 18 Haziran, 14:30", notif_1_w:"2 saat önce",
     notif_2_t:"Randevu hatırlatması", notif_2_s:"Randevunuza 1 gün kaldı 🦷", notif_2_w:"Dün",
@@ -786,6 +809,15 @@ const I18N = {
     ig_desktop_intro:"Через меню Chrome (3 шага):",
     ig_desktop:["Нажмите <b>⋮</b> вверху справа","Выберите <b>«Доп. инструменты»</b> → <b>«Создать ярлык»</b>","Снимите галочку <b>«Открывать в отдельном окне»</b> → «Создать» — готово! 🎉"],
     ig_desktop_note:"Ярлык появится на рабочем столе и откроет сайт обычной вкладкой браузера.",
+    svc_about:"О процедуре", svc_materials:"Материалы и оборудование", svc_book_cta:"Записаться на эту процедуру →",
+    implant_info:"Используем швейцарские имплантаты Straumann и немецкие Camlog — срок службы 25+ лет. После приживления (3 месяца) устанавливается коронка из циркония или E-max керамики. Всё под местной анестезией, без боли; полный цикл — 2 визита.",
+    implant_mats:"Straumann (Швейцария) · Camlog (Германия) · Цирконий · E.max керамика",
+    veneer_info:"Накладки 0,3 мм из японской e.max пресс-керамики — идентичны натуральному зубу по цвету и прозрачности. Без сошлифовки эмали, обратимая процедура. 2 визита: слепок + фиксация.",
+    veneer_mats:"Японская E.max Press · IPS Empress · UV-стойкий адгезив",
+    whitening_info:"Лазерное отбеливание системой ZOOM 3 — 6–8 тонов за 45 минут. Специальный десенситизирующий гель защищает эмаль от чувствительности. Эффект сохраняется 2–3 года. При наличии кариеса — сначала лечение.",
+    whitening_mats:"Philips ZOOM 3 · Защитный гель для эмали · Капа для защиты дёсен",
+    ortho_info:"Прозрачные капы Invisalign или металлические/керамические брекеты. До начала — 3D цифровое планирование: вы видите результат заранее. Еженедельный контроль прогресса. Срок: 6–24 месяца. Первая консультация с рентгеном включена.",
+    ortho_mats:"Invisalign (США) · Брекеты 3M Clarity · 3D цифровое сканирование",
     notif_title:"Уведомления",
     notif_1_t:"Скоро приём", notif_1_s:"Dr. Fatma Koç · 18 июня, 14:30", notif_1_w:"2 часа назад",
     notif_2_t:"Напоминание о приёме", notif_2_s:"До приёма 1 день 🦷", notif_2_w:"Вчера",
@@ -888,6 +920,15 @@ const I18N = {
     ig_desktop_intro:"From Chrome menu (3 steps):",
     ig_desktop:["Click <b>⋮</b> in the top right","Choose <b>'More tools'</b> → <b>'Create shortcut'</b>","Uncheck <b>'Open as window'</b> → click 'Create' — done! 🎉"],
     ig_desktop_note:"A shortcut appears on your desktop and opens the site as a normal browser tab.",
+    svc_about:"About This Procedure", svc_materials:"Materials & Equipment", svc_book_cta:"Book This Procedure →",
+    implant_info:"We use Swiss Straumann and German Camlog titanium implants — 25+ year lifespan. After osseointegration (3 months) a zirconia or E.max ceramic crown is placed. Everything under local anesthesia, pain-free; full cycle in 2 visits.",
+    implant_mats:"Straumann (Switzerland) · Camlog (Germany) · Zirconia crown · E.max ceramic",
+    veneer_info:"Ultra-thin 0.3mm Japanese e.max pressed ceramic — identical to natural tooth color and translucency. No enamel grinding, fully reversible. 2 visits: impression + bonding.",
+    veneer_mats:"Japanese E.max Press · IPS Empress ceramic · UV-resistant bonding agent",
+    whitening_info:"ZOOM 3 laser whitening — 6–8 shades brighter in 45 minutes. Special desensitizing gel protects enamel from sensitivity. Results last 2–3 years. Active cavities treated first if present.",
+    whitening_mats:"Philips ZOOM 3 · Enamel-protective gel · Gum shield",
+    ortho_info:"Invisalign clear aligners or metal/ceramic braces. Pre-treatment 3D digital simulation — you see your result before we start. Weekly progress tracking. Duration: 6–24 months. First consultation with X-ray included.",
+    ortho_mats:"Invisalign (USA) · 3M Clarity brackets · Digital 3D scanning",
     notif_title:"Notifications",
     notif_1_t:"Appointment coming up", notif_1_s:"Dr. Fatma Koç · June 18, 14:30", notif_1_w:"2 hours ago",
     notif_2_t:"Appointment reminder", notif_2_s:"1 day until your appointment 🦷", notif_2_w:"Yesterday",
@@ -1100,6 +1141,34 @@ function openBooking(preService){
     else { bk={svc:'',doc:'any',dateDay:0,time:''}; step=1; }
     render(); openSheet('bmodal');
 }
+function openSvcDetail(key){
+    const icons = { implant:'🦷', veneer:'✨', whitening:'💎', ortho:'🔄', canal:'🩺', cleaning:'🧹', zirconium:'👑', smile:'🎨' };
+    const prices = { implant:'₺3.500+', veneer:'₺2.800+', whitening:'₺850+', ortho:'₺5.500+', canal:'₺600+', cleaning:'₺350+', zirconium:'₺2.200+', smile:'₺3.000+' };
+    const colors = { implant:'#1565C0,#0D1B4E', veneer:'#7C3AED,#5B21B6', whitening:'#0D9488,#065F46', ortho:'#059669,#064E3B', canal:'#DC2626,#7F1D1D', cleaning:'#EA580C,#7C2D12', zirconium:'#0369A1,#0C4A6E', smile:'#D97706,#78350F' };
+    const grad = colors[key] || '1565C0,#0D1B4E';
+
+    const mats = t('implant_mats'); // preload check
+    const pills = (t(key+'_mats')||'').split('·').map(s=>s.trim()).filter(Boolean);
+
+    const html = `
+      <div class="svcdet-hero" style="background:linear-gradient(135deg,#${grad})">
+        <div class="svcdet-hero-ic">${icons[key]||'🦷'}</div>
+        <div class="svcdet-hero-nm">${t(key)}</div>
+        <div class="svcdet-hero-pr">${prices[key]||''}</div>
+      </div>
+      <div class="svcdet-body">
+        <div class="svcdet-tagline">${t(key+'_d')}</div>
+        <div class="svcdet-sec-lbl">${t('svc_about')}</div>
+        <div class="svcdet-info">${t(key+'_info')}</div>
+        <div class="svcdet-sec-lbl">${t('svc_materials')}</div>
+        <div class="svcdet-pills">${pills.map(p=>`<span class="svcdet-pill">${p}</span>`).join('')}</div>
+        <button class="svcdet-cta" onclick="closeSheets();setTimeout(()=>openBooking('${key}'),120)">${t('svc_book_cta')}</button>
+      </div>`;
+
+    document.getElementById('svcdet-content').innerHTML = html;
+    openSheet('svcdetmodal');
+}
+
 function openEmergency(){
     submitting=false;
     bk={svc:'emergency',doc:'any',dateDay:TODAY,time:''}; step=2;

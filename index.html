@@ -680,6 +680,10 @@ const I18N = {
     ig_android_intro:"Tarayıcı menüsünden:",
     ig_android:["Sağ üstteki <b>⋮</b> menüsüne dokunun","<b>«Ana ekrana ekle» / «Yükle»</b> — bitti! 🎉"],
     ig_android_note:"Çoğu telefonda butona basınca tek dokunuşla otomatik kurulur.",
+    ig_desktop_title:"Masaüstüne kısayol ekle",
+    ig_desktop_intro:"Chrome menüsünden (3 adım):",
+    ig_desktop:["Sağ üstteki <b>⋮</b> menüsüne tıklayın","<b>«Diğer araçlar»</b> → <b>«Kısayol oluştur»</b>","<b>«Ayrı pencerede aç»</b> kutusunu işaretlemeyin → «Oluştur» — bitti! 🎉"],
+    ig_desktop_note:"Kısayol masaüstünüze eklenir ve siteyi normal tarayıcı sekmesinde açar.",
     notif_title:"Bildirimler",
     notif_1_t:"Randevunuz yaklaşıyor", notif_1_s:"Dr. Fatma Koç · 18 Haziran, 14:30", notif_1_w:"2 saat önce",
     notif_2_t:"Randevu hatırlatması", notif_2_s:"Randevunuza 1 gün kaldı 🦷", notif_2_w:"Dün",
@@ -778,6 +782,10 @@ const I18N = {
     ig_android_intro:"Через меню браузера:",
     ig_android:["Нажмите <b>⋮</b> вверху справа","<b>«Добавить на главный экран» / «Установить»</b> — готово! 🎉"],
     ig_android_note:"На большинстве телефонов установка идёт в один тап прямо по кнопке.",
+    ig_desktop_title:"Добавить ярлык на рабочий стол",
+    ig_desktop_intro:"Через меню Chrome (3 шага):",
+    ig_desktop:["Нажмите <b>⋮</b> вверху справа","Выберите <b>«Доп. инструменты»</b> → <b>«Создать ярлык»</b>","Снимите галочку <b>«Открывать в отдельном окне»</b> → «Создать» — готово! 🎉"],
+    ig_desktop_note:"Ярлык появится на рабочем столе и откроет сайт обычной вкладкой браузера.",
     notif_title:"Уведомления",
     notif_1_t:"Скоро приём", notif_1_s:"Dr. Fatma Koç · 18 июня, 14:30", notif_1_w:"2 часа назад",
     notif_2_t:"Напоминание о приёме", notif_2_s:"До приёма 1 день 🦷", notif_2_w:"Вчера",
@@ -876,6 +884,10 @@ const I18N = {
     ig_android_intro:"From the browser menu:",
     ig_android:["Tap the <b>⋮</b> menu (top right)","<b>'Add to Home screen' / 'Install'</b> — done! 🎉"],
     ig_android_note:"On most phones it installs in one tap right from the button.",
+    ig_desktop_title:"Add shortcut to desktop",
+    ig_desktop_intro:"From Chrome menu (3 steps):",
+    ig_desktop:["Click <b>⋮</b> in the top right","Choose <b>'More tools'</b> → <b>'Create shortcut'</b>","Uncheck <b>'Open as window'</b> → click 'Create' — done! 🎉"],
+    ig_desktop_note:"A shortcut appears on your desktop and opens the site as a normal browser tab.",
     notif_title:"Notifications",
     notif_1_t:"Appointment coming up", notif_1_s:"Dr. Fatma Koç · June 18, 14:30", notif_1_w:"2 hours ago",
     notif_2_t:"Appointment reminder", notif_2_s:"1 day until your appointment 🦷", notif_2_w:"Yesterday",
@@ -1415,9 +1427,12 @@ window.addEventListener('appinstalled',()=>{ deferredPrompt=null; const ib=docum
 
 function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true; }
 function isiOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream; }
+function isMobile(){ return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
 
 async function doInstall(){
     if(isStandalone()){ toast(t('install_have')); return; }
+    // Desktop: skip PWA app-window install, show desktop shortcut guide instead
+    if(!isMobile()){ showInstallGuide(); return; }
     if(deferredPrompt){
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
@@ -1425,20 +1440,42 @@ async function doInstall(){
         if(outcome==='accepted'){ const ib=document.getElementById('ibanner'); if(ib) ib.style.display='none'; toast(t('install_done')); }
         return;
     }
-    // Fallback: show manual instructions (iOS Safari has no prompt API)
     showInstallGuide();
 }
 
 function showInstallGuide(){
     const ios = isiOS();
-    const steps = ios ? t('ig_ios') : t('ig_android');
-    const intro = ios ? t('ig_ios_intro') : t('ig_android_intro');
-    document.getElementById('ig-ttl').textContent = t('ig_title');
+    const desktop = !isMobile();
 
-    const shareIcon = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 11v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>`;
-    const plusIcon  = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 9v6M9 12h6"/></svg>`;
-    const menuIcon  = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#1565C0"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>`;
-    const icons = ios ? [shareIcon, plusIcon] : [menuIcon, plusIcon];
+    let steps, intro, note, title;
+    if(desktop){
+        steps = t('ig_desktop');
+        intro = t('ig_desktop_intro');
+        title = t('ig_desktop_title');
+        note  = `<div class="ig-android-note">💡 ${t('ig_desktop_note')}</div>`;
+    } else if(ios){
+        steps = t('ig_ios');
+        intro = t('ig_ios_intro');
+        title = t('ig_title');
+        note  = `<div class="ig-hint">👇 ${t('ig_ios_where')}</div><div class="ig-android-note" style="text-align:left">ℹ️ ${t('ig_ios_note')}</div>`;
+    } else {
+        steps = t('ig_android');
+        intro = t('ig_android_intro');
+        title = t('ig_title');
+        note  = `<div class="ig-android-note">${t('ig_android_note')}</div>`;
+    }
+    document.getElementById('ig-ttl').textContent = title;
+
+    const shareIcon  = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 11v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>`;
+    const plusIcon   = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 9v6M9 12h6"/></svg>`;
+    const menuIcon   = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#1565C0"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>`;
+    const folderIcon = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`;
+    const checkIcon  = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    let icons;
+    if(desktop)    icons = [menuIcon, folderIcon, checkIcon];
+    else if(ios)   icons = [shareIcon, plusIcon];
+    else           icons = [menuIcon, plusIcon];
 
     let html = `<div class="ig-intro">${intro}</div>`;
     html += steps.map((s,i)=>`
@@ -1446,8 +1483,7 @@ function showInstallGuide(){
             <div class="ig-vis"><div class="ig-vis-num">${i+1}</div>${icons[i]||''}</div>
             <div class="ig-txt">${s}</div>
         </div>`).join('');
-    if(ios) html += `<div class="ig-hint">👇 ${t('ig_ios_where')}</div><div class="ig-android-note" style="text-align:left">ℹ️ ${t('ig_ios_note')}</div>`;
-    else    html += `<div class="ig-android-note">${t('ig_android_note')}</div>`;
+    html += note;
 
     document.getElementById('ig-content').innerHTML = html;
     openSheet('imodal');

@@ -59,11 +59,9 @@
         html.standalone #ibanner,
         html.standalone .sbar { display:none !important; }
         html.standalone .hdr  { padding-top: calc(env(safe-area-inset-top) + 12px); }
-        html.standalone .bnav { padding-bottom: calc(env(safe-area-inset-bottom) + 10px); }
         @media (display-mode: standalone) {
             #ibanner, .sbar { display:none !important; }
             .hdr  { padding-top: calc(env(safe-area-inset-top) + 12px); }
-            .bnav { padding-bottom: calc(env(safe-area-inset-bottom) + 10px); }
         }
 
         html, body {
@@ -72,6 +70,7 @@
             font-family:'Inter',-apple-system,sans-serif;
             background: var(--p-dark);
         }
+        @media (max-width:430px) { html, body { background: var(--bg); } }
 
         #app {
             position:fixed;
@@ -107,12 +106,12 @@
 
         /* ── Page wrapper ─── */
         .content { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-        .page { display:none; padding-bottom:80px; }
+        .page { display:none; padding-bottom:calc(100px + env(safe-area-inset-bottom)); }
         .page.active { display:block; animation:fadeUp .22s ease; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
         /* ── Bottom Nav ─── */
-        .bnav { background:var(--card); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0 max(8px, env(safe-area-inset-bottom)); flex-shrink:0; position:relative; z-index:100; }
+        .bnav { position:fixed; bottom:0; left:max(0px,calc((100vw - 430px)/2)); right:max(0px,calc((100vw - 430px)/2)); background:var(--card); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0 max(20px,env(safe-area-inset-bottom)); z-index:200; }
         .ni { display:flex; flex-direction:column; align-items:center; gap:3px; padding:4px 12px; cursor:pointer; }
         .ni-icon { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:21px; transition:background .2s; }
         .ni-lbl { font-size:10px; font-weight:600; color:var(--muted); transition:color .2s; white-space:nowrap; }

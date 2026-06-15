@@ -1,7 +1,7 @@
-/* ArtSmile PWA Service Worker — v4
+/* ArtSmile PWA Service Worker — v5
    Стратегия: HTML всегда из сети (свежее обновление без переустановки ярлыка),
    кэш только для офлайн-фолбэка и статики (иконки). */
-const CACHE = 'artsmile-v4';
+const CACHE = 'artsmile-v5';
 const ASSETS = [
   './manifest.webmanifest',
   './icon-192.png',

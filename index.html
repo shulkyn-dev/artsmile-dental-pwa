@@ -258,6 +258,49 @@
         .sb-pnd { background:#FEF3C7; color:#92400E; }
         .sb-done{ background:#F3F4F6; color:#6B7280; }
 
+        /* ── Profile enhanced ── */
+        .prof-since { font-size:12px; opacity:.72; margin-top:3px; }
+        .prof-vip-badge { display:inline-block; background:var(--gold); color:#1a1400; padding:3px 12px; border-radius:20px; font-size:11px; font-weight:800; margin-top:8px; }
+
+        /* Info cards */
+        .info-card { margin:12px 12px 0; background:var(--card); border-radius:var(--r); padding:14px 16px; box-shadow:var(--sh); }
+        .info-card-ttl { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:10px; }
+        .info-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border); }
+        .info-row:last-child { border-bottom:none; padding-bottom:0; }
+        .info-ic { font-size:18px; width:26px; flex-shrink:0; text-align:center; }
+        .info-lbl { font-size:11px; color:var(--muted); line-height:1.2; }
+        .info-val { font-size:14px; font-weight:600; color:var(--text); margin-top:1px; }
+        .health-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700; margin-top:2px; }
+        .hp-allergy { background:#FEE2E2; color:#991B1B; }
+        .hp-blood   { background:#DBEAFE; color:#1E40AF; }
+
+        /* Next checkup banner */
+        .next-check { margin:12px 12px 0; background:linear-gradient(135deg,var(--p),var(--p-dark)); color:#fff; border-radius:var(--r); padding:16px; display:flex; gap:14px; align-items:flex-start; }
+        .next-check-ic { font-size:30px; flex-shrink:0; }
+        .next-check-ttl { font-size:14px; font-weight:800; }
+        .next-check-sub { font-size:12px; opacity:.82; margin-top:3px; line-height:1.4; }
+        .next-check-btn { margin-top:10px; background:var(--gold); color:#1a1400; padding:8px 16px; border-radius:9px; font-size:13px; font-weight:800; cursor:pointer; display:inline-block; }
+
+        /* Treatment history cards */
+        .hist-item { margin:0 12px 10px; background:var(--card); border-radius:var(--r); overflow:hidden; box-shadow:var(--sh); }
+        .hist-top { display:flex; align-items:center; gap:12px; padding:14px 16px 10px; }
+        .hist-date-col { text-align:center; min-width:38px; flex-shrink:0; }
+        .hist-day { font-size:22px; font-weight:900; color:var(--p); line-height:1; }
+        .hist-mon { font-size:10px; color:var(--muted); text-transform:uppercase; font-weight:700; }
+        .hist-svc { font-size:15px; font-weight:700; color:var(--text); }
+        .hist-doc { font-size:12px; color:var(--muted); margin-top:2px; }
+        .hist-note { margin:0 16px 0; padding:10px 12px; background:var(--bg); border-radius:10px; border-left:3px solid var(--p); }
+        .hist-note-lbl { font-size:10px; font-weight:700; color:var(--p); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+        .hist-note-txt { font-size:13px; color:var(--text); line-height:1.5; }
+        .hist-footer { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-top:1px solid var(--border); margin-top:12px; }
+        .hist-cost-lbl { font-size:10px; color:var(--muted); }
+        .hist-cost { font-size:15px; font-weight:800; color:var(--p); }
+
+        /* Loyalty */
+        .loyalty-card { margin:12px 12px 20px; background:var(--card); border-radius:var(--r); padding:16px; box-shadow:var(--sh); display:flex; align-items:center; gap:14px; }
+        .loyalty-bar { height:6px; background:var(--border); border-radius:3px; margin-top:8px; overflow:hidden; }
+        .loyalty-bar-fill { height:100%; background:var(--gold); border-radius:3px; }
+
         .overlay { position:absolute; inset:0; background:rgba(0,0,0,.52); z-index:150; opacity:0; pointer-events:none; transition:opacity .3s; }
         .overlay.on { opacity:1; pointer-events:all; }
 
@@ -542,25 +585,121 @@
             <div class="doc-list" id="doc-list"></div>
         </div>
 
-        <!-- PROFILE -->
+        <!-- PROFILE / ЛИЧНЫЙ КАБИНЕТ -->
         <div class="page" id="page-profile">
+
+            <!-- Шапка -->
             <div class="prof-hdr">
                 <div class="prof-ava">A</div>
                 <div class="prof-nm">Ahmet Demir</div>
-                <div class="prof-id" data-i18n="prof_id"></div>
+                <div class="prof-since" data-i18n="prof_since"></div>
+                <div class="prof-vip-badge" data-i18n="prof_vip"></div>
                 <div class="prof-stats">
                     <div><div class="st-num" id="stat-visits">7</div><div class="st-lbl" data-i18n="st_visits"></div></div>
                     <div><div class="st-num" id="stat-upcoming">2</div><div class="st-lbl" data-i18n="st_upcoming"></div></div>
                     <div><div class="st-num">5★</div><div class="st-lbl" data-i18n="st_rating"></div></div>
                 </div>
             </div>
-            <div class="apt-list">
+
+            <!-- Личные данные -->
+            <div class="info-card">
+                <div class="info-card-ttl" data-i18n="info_personal"></div>
+                <div class="info-row"><div class="info-ic">📱</div><div><div class="info-lbl" data-i18n="info_phone"></div><div class="info-val">+90 532 555 01 23</div></div></div>
+                <div class="info-row"><div class="info-ic">🎂</div><div><div class="info-lbl" data-i18n="info_birth"></div><div class="info-val">15.03.1985</div></div></div>
+                <div class="info-row"><div class="info-ic">👨‍⚕️</div><div><div class="info-lbl" data-i18n="info_dentist"></div><div class="info-val">Dr. Ahmet Yılmaz</div></div></div>
+                <div class="info-row"><div class="info-ic">🆔</div><div><div class="info-lbl" data-i18n="prof_id"></div><div class="info-val">#PT-2023-0847</div></div></div>
+            </div>
+
+            <!-- Медкарта -->
+            <div class="info-card">
+                <div class="info-card-ttl" data-i18n="info_health"></div>
+                <div class="info-row"><div class="info-ic">🩸</div><div><div class="info-lbl" data-i18n="info_blood"></div><span class="health-pill hp-blood">A+</span></div></div>
+                <div class="info-row"><div class="info-ic">⚠️</div><div><div class="info-lbl" data-i18n="info_allergy"></div><span class="health-pill hp-allergy" data-i18n="allergy_penicillin"></span></div></div>
+                <div class="info-row"><div class="info-ic">🦷</div><div><div class="info-lbl" data-i18n="info_xray"></div><div class="info-val">12.05.2025</div></div></div>
+            </div>
+
+            <!-- Напоминание о визите -->
+            <div class="next-check">
+                <div class="next-check-ic">🗓️</div>
+                <div>
+                    <div class="next-check-ttl" data-i18n="next_check_ttl"></div>
+                    <div class="next-check-sub" data-i18n="next_check_sub"></div>
+                    <div class="next-check-btn" onclick="closeSheets();openBooking('cleaning')" data-i18n="book_now"></div>
+                </div>
+            </div>
+
+            <!-- Предстоящие записи -->
+            <div class="apt-list" style="padding-bottom:4px">
                 <div class="divlbl" data-i18n="upcoming_apts"></div>
                 <div id="upcoming-list"></div>
-                <div class="divlbl" style="margin-top:8px" data-i18n="past_visits"></div>
-                <div class="apt-card" style="opacity:.65"><div class="apt-dt"><div class="apt-day">5</div><div class="apt-mon" data-i18n="mon_jun"></div></div><div style="flex:1"><div class="apt-svc" data-i18n="apt_implant_fu"></div><div class="apt-doc">Dr. Ahmet Yılmaz</div><div class="apt-time">🕙 11:00</div></div><span class="sbadge sb-done" data-i18n="st_done"></span></div>
-                <div class="apt-card" style="opacity:.65"><div class="apt-dt"><div class="apt-day">12</div><div class="apt-mon" data-i18n="mon_may"></div></div><div style="flex:1"><div class="apt-svc" data-i18n="apt_tartar"></div><div class="apt-doc">Dr. Zeynep Arslan</div><div class="apt-time">🕒 15:30</div></div><span class="sbadge sb-done" data-i18n="st_done"></span></div>
             </div>
+
+            <!-- История лечения -->
+            <div class="apt-list" style="padding-top:0;padding-bottom:8px">
+                <div class="divlbl" data-i18n="past_visits"></div>
+            </div>
+
+            <!-- Визит 1 -->
+            <div class="hist-item">
+                <div class="hist-top">
+                    <div class="hist-date-col"><div class="hist-day">5</div><div class="hist-mon" data-i18n="mon_jun"></div></div>
+                    <div style="flex:1"><div class="hist-svc" data-i18n="apt_implant_fu"></div><div class="hist-doc">Dr. Ahmet Yılmaz · 🕙 11:00</div></div>
+                    <span class="sbadge sb-done" data-i18n="st_done"></span>
+                </div>
+                <div class="hist-note">
+                    <div class="hist-note-lbl" data-i18n="doc_note"></div>
+                    <div class="hist-note-txt" data-i18n="note_implant_fu"></div>
+                </div>
+                <div class="hist-footer">
+                    <div><div class="hist-cost-lbl" data-i18n="paid"></div><div class="hist-cost">₺1.200</div></div>
+                    <span class="sbadge sb-done">✓</span>
+                </div>
+            </div>
+
+            <!-- Визит 2 -->
+            <div class="hist-item">
+                <div class="hist-top">
+                    <div class="hist-date-col"><div class="hist-day">12</div><div class="hist-mon" data-i18n="mon_may"></div></div>
+                    <div style="flex:1"><div class="hist-svc" data-i18n="apt_tartar"></div><div class="hist-doc">Dr. Zeynep Arslan · 🕒 15:30</div></div>
+                    <span class="sbadge sb-done" data-i18n="st_done"></span>
+                </div>
+                <div class="hist-note">
+                    <div class="hist-note-lbl" data-i18n="doc_note"></div>
+                    <div class="hist-note-txt" data-i18n="note_tartar"></div>
+                </div>
+                <div class="hist-footer">
+                    <div><div class="hist-cost-lbl" data-i18n="paid"></div><div class="hist-cost">₺350</div></div>
+                    <span class="sbadge sb-done">✓</span>
+                </div>
+            </div>
+
+            <!-- Визит 3 -->
+            <div class="hist-item">
+                <div class="hist-top">
+                    <div class="hist-date-col"><div class="hist-day">3</div><div class="hist-mon" data-i18n="mon_feb"></div></div>
+                    <div style="flex:1"><div class="hist-svc" data-i18n="apt_implant_place"></div><div class="hist-doc">Dr. Ahmet Yılmaz · 🕙 10:00</div></div>
+                    <span class="sbadge sb-done" data-i18n="st_done"></span>
+                </div>
+                <div class="hist-note">
+                    <div class="hist-note-lbl" data-i18n="doc_note"></div>
+                    <div class="hist-note-txt" data-i18n="note_implant"></div>
+                </div>
+                <div class="hist-footer">
+                    <div><div class="hist-cost-lbl" data-i18n="paid"></div><div class="hist-cost">₺3.500</div></div>
+                    <span class="sbadge sb-done">✓</span>
+                </div>
+            </div>
+
+            <!-- Программа лояльности -->
+            <div class="loyalty-card">
+                <div style="font-size:30px">🎁</div>
+                <div style="flex:1">
+                    <div style="font-size:15px;font-weight:800;color:var(--text)" data-i18n="loyalty_pts"></div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:2px" data-i18n="loyalty_sub"></div>
+                    <div class="loyalty-bar"><div class="loyalty-bar-fill" style="width:68%"></div></div>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -671,9 +810,19 @@ const I18N = {
     nav_home:"Ana Sayfa", nav_services:"Hizmetler", nav_book:"Randevu", nav_doctors:"Doktorlar", nav_profile:"Profil",
     prof_id:"Hasta No: #ASD-2847", st_visits:"Ziyaret", st_upcoming:"Yaklaşan", st_rating:"Puanım",
     upcoming_apts:"Yaklaşan Randevular", past_visits:"Geçmiş Ziyaretler",
-    apt_checkup:"Kontrol Muayenesi", apt_implant_fu:"İmplant Takibi", apt_tartar:"Diş Taşı Temizleme",
+    apt_checkup:"Kontrol Muayenesi", apt_implant_fu:"İmplant Takibi", apt_tartar:"Diş Taşı Temizleme", apt_implant_place:"İmplant Yerleştirme #36",
     st_confirmed:"Onaylı", st_pending:"Bekliyor", st_done:"Tamam",
-    mon_jun:"HAZ", mon_may:"MAY", month_long:"Haziran", month_cal:"Haziran 2026",
+    mon_jun:"HAZ", mon_may:"MAY", mon_feb:"ŞUB", month_long:"Haziran", month_cal:"Haziran 2026",
+    prof_since:"2023'den beri hasta", prof_vip:"⭐ Sadık Hasta",
+    info_personal:"Kişisel Bilgiler", info_phone:"Telefon", info_birth:"Doğum Tarihi", info_dentist:"Kişisel Diş Hekimi",
+    info_health:"Tıbbi Kayıt", info_blood:"Kan Grubu", info_allergy:"Alerji", allergy_penicillin:"Penisilin", info_xray:"Son Röntgen",
+    next_check_ttl:"Kontrol Zamanı!", next_check_sub:"Son temizliğinizin üzerinden 6 ay geçti. Doktorunuz bir ziyaret öneriyor.", book_now:"Randevu Al →",
+    doc_note:"Doktor Notu",
+    note_implant_fu:"Osseointegrasyon tamamlandı. #36 implanta kron başarıyla takıldı. Hasta toleransı iyi. 6 ay sonra kontrol randevusu planlandı.",
+    note_tartar:"Alt ön dişlerde hafif-orta plak birikimi tespit edildi. Ultrasonik skaler ile profesyonel temizlik yapıldı. Florür jel uygulandı. Elektrikli diş fırçası kullanımı önerildi.",
+    note_implant:"Straumann BL ∅4.1mm implant, lokal anestezi altında (artikain %4 — penisilin alerjisi kayıtta, kullanılmadı) #36 pozisyonuna yerleştirildi. Primer stabilite sağlandı. Dikiş atıldı. Reçete: Augmentin 1g 2×5gün, ibuprofen 400mg gerektiğinde.",
+    paid:"Ödendi",
+    loyalty_pts:"680 Bonus Puan", loyalty_sub:"Sonraki ziyarette %10 indirim için 320 puan daha gerekiyor",
     weekdays:["Pt","Sa","Ça","Pe","Cu","Ct","Pa"],
     m_title_1:"Randevu Al", m_title_2:"Tarih & Doktor", m_title_3:"Onay", m_title_4:"Tamamlandı",
     step1_q:"Hangi hizmeti istiyorsunuz?", emg_big:"🚨 Dişim ağrıyor — acil randevu",
@@ -782,9 +931,19 @@ const I18N = {
     nav_home:"Главная", nav_services:"Услуги", nav_book:"Запись", nav_doctors:"Врачи", nav_profile:"Профиль",
     prof_id:"Пациент №: #ASD-2847", st_visits:"Визиты", st_upcoming:"Предстоящие", st_rating:"Мой рейтинг",
     upcoming_apts:"Предстоящие записи", past_visits:"Прошлые визиты",
-    apt_checkup:"Контрольный осмотр", apt_implant_fu:"Контроль импланта", apt_tartar:"Удаление зубного камня",
+    apt_checkup:"Контрольный осмотр", apt_implant_fu:"Контроль импланта", apt_tartar:"Удаление зубного камня", apt_implant_place:"Установка импланта #36",
     st_confirmed:"Подтверждено", st_pending:"Ожидает", st_done:"Готово",
-    mon_jun:"ИЮН", mon_may:"МАЙ", month_long:"июня", month_cal:"Июнь 2026",
+    mon_jun:"ИЮН", mon_may:"МАЙ", mon_feb:"ФЕВ", month_long:"июня", month_cal:"Июнь 2026",
+    prof_since:"Пациент с 2023 года", prof_vip:"⭐ Постоянный пациент",
+    info_personal:"Личные данные", info_phone:"Телефон", info_birth:"Дата рождения", info_dentist:"Личный врач",
+    info_health:"Медицинская карта", info_blood:"Группа крови", info_allergy:"Аллергии", allergy_penicillin:"Пенициллин", info_xray:"Последний рентген",
+    next_check_ttl:"Пора на осмотр!", next_check_sub:"Последняя чистка была 6 месяцев назад. Врач рекомендует визит.", book_now:"Записаться →",
+    doc_note:"Заметка врача",
+    note_implant_fu:"Остеоинтеграция завершена. Установлена коронка на имплант #36. Переносимость хорошая. Контрольный приём через 6 месяцев.",
+    note_tartar:"Умеренный налёт на нижних передних зубах. Проведена ультразвуковая чистка. Нанесён фторидный гель. Рекомендована электрическая щётка.",
+    note_implant:"Установлен имплант Straumann BL ∅4.1мм в позицию #36 под местной анестезией (артикаин 4%, пенициллин не применялся — аллергия в карте). Первичная стабильность достигнута. Швы наложены. Назначено: Аугментин 1г 2×5дн, ибупрофен 400мг по необходимости.",
+    paid:"Оплачено",
+    loyalty_pts:"680 бонусных баллов", loyalty_sub:"Ещё 320 баллов — и скидка 10% на следующий визит",
     weekdays:["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],
     m_title_1:"Записаться", m_title_2:"Дата и врач", m_title_3:"Подтверждение", m_title_4:"Готово",
     step1_q:"Какую услугу вы хотите?", emg_big:"🚨 Болит зуб — срочная запись",
@@ -893,9 +1052,19 @@ const I18N = {
     nav_home:"Home", nav_services:"Services", nav_book:"Book", nav_doctors:"Doctors", nav_profile:"Profile",
     prof_id:"Patient No: #ASD-2847", st_visits:"Visits", st_upcoming:"Upcoming", st_rating:"My rating",
     upcoming_apts:"Upcoming Appointments", past_visits:"Past Visits",
-    apt_checkup:"Check-up Exam", apt_implant_fu:"Implant Follow-up", apt_tartar:"Tartar Removal",
+    apt_checkup:"Check-up Exam", apt_implant_fu:"Implant Follow-up", apt_tartar:"Tartar Removal", apt_implant_place:"Implant Placement #36",
     st_confirmed:"Confirmed", st_pending:"Pending", st_done:"Done",
-    mon_jun:"JUN", mon_may:"MAY", month_long:"June", month_cal:"June 2026",
+    mon_jun:"JUN", mon_may:"MAY", mon_feb:"FEB", month_long:"June", month_cal:"June 2026",
+    prof_since:"Patient since 2023", prof_vip:"⭐ Loyal Patient",
+    info_personal:"Personal Information", info_phone:"Phone", info_birth:"Date of Birth", info_dentist:"Personal Dentist",
+    info_health:"Medical Record", info_blood:"Blood Type", info_allergy:"Allergies", allergy_penicillin:"Penicillin", info_xray:"Last X-Ray",
+    next_check_ttl:"Time for a Check-up!", next_check_sub:"Your last cleaning was 6 months ago. Your dentist recommends a visit.", book_now:"Book Now →",
+    doc_note:"Doctor's Note",
+    note_implant_fu:"Osseointegration complete. Crown fitted on implant #36. Patient tolerates well. Recall scheduled in 6 months.",
+    note_tartar:"Mild-moderate plaque on lower anteriors. Ultrasonic scaling performed. Fluoride gel applied. Electric toothbrush recommended.",
+    note_implant:"Straumann BL ∅4.1mm implant placed at site #36 under local anaesthesia (articaine 4% — no penicillin, allergy on file). Primary stability achieved. Sutures placed. Rx: Augmentin 1g BD×5d, ibuprofen 400mg PRN.",
+    paid:"Paid",
+    loyalty_pts:"680 Bonus Points", loyalty_sub:"320 more points until 10% discount on your next visit",
     weekdays:["Mo","Tu","We","Th","Fr","Sa","Su"],
     m_title_1:"Book Appointment", m_title_2:"Date & Doctor", m_title_3:"Confirmation", m_title_4:"Done",
     step1_q:"Which service do you want?", emg_big:"🚨 Toothache — urgent appointment",

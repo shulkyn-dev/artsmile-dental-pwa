@@ -468,7 +468,7 @@
 
             <div class="qa-grid">
                 <div class="qa" onclick="openBooking()"><div class="qa-ic" style="background:#EEF2FF">📅</div><div class="qa-lbl" data-i18n="qa_book"></div></div>
-                <div class="qa" onclick="nav('services')"><div class="qa-ic" style="background:#FFF7ED">🦷</div><div class="qa-lbl" data-i18n="qa_services"></div></div>
+                <div class="qa" onclick="nav('svcinfo')"><div class="qa-ic" style="background:#FFF7ED">🦷</div><div class="qa-lbl" data-i18n="qa_services"></div></div>
                 <div class="qa" onclick="nav('doctors')"><div class="qa-ic" style="background:#F0FDF4">👨‍⚕️</div><div class="qa-lbl" data-i18n="qa_doctors"></div></div>
                 <div class="qa" onclick="showWA()"><div class="qa-ic" style="background:#F0FDF4">💬</div><div class="qa-lbl" data-i18n="qa_whatsapp"></div></div>
             </div>
@@ -476,7 +476,7 @@
             <div class="contact-card" id="contact-card"></div>
 
             <div class="sec">
-                <div class="sec-hdr"><div class="sec-ttl" data-i18n="pop_services"></div><div class="sec-lnk" data-i18n="see_all" onclick="nav('services')"></div></div>
+                <div class="sec-hdr"><div class="sec-ttl" data-i18n="pop_services"></div><div class="sec-lnk" data-i18n="see_all" onclick="nav('svcinfo')"></div></div>
                 <div class="scroll-row">
                     <div class="svc-card" onclick="openSvcDetail('implant')"><div class="svc-ic">🦷</div><div class="svc-name" data-i18n="implant"></div><div class="svc-pr">₺3.500+</div></div>
                     <div class="svc-card" onclick="openSvcDetail('veneer')"><div class="svc-ic">✨</div><div class="svc-name" data-i18n="veneer"></div><div class="svc-pr">₺2.800+</div></div>
@@ -506,7 +506,22 @@
             <div style="height:10px"></div>
         </div>
 
-        <!-- SERVICES -->
+        <!-- SERVICES INFO — описание + материалы (быстрые кнопки сверху + "Все →") -->
+        <div class="page" id="page-svcinfo">
+            <div class="phdr"><div class="phdr-t" data-i18n="services_title"></div><div class="phdr-s" data-i18n="services_sub"></div></div>
+            <div class="svc-grid">
+                <div class="svc-item" onclick="openSvcDetail('implant')"><div class="svc-item-ic">🦷</div><div class="svc-item-nm" data-i18n="implant"></div><div class="svc-item-dsc" data-i18n="implant_d"></div><div class="svc-item-pr">₺3.500+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('veneer')"><div class="svc-item-ic">✨</div><div class="svc-item-nm" data-i18n="veneer"></div><div class="svc-item-dsc" data-i18n="veneer_d"></div><div class="svc-item-pr">₺2.800+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('whitening')"><div class="svc-item-ic">💎</div><div class="svc-item-nm" data-i18n="whitening"></div><div class="svc-item-dsc" data-i18n="whitening_d"></div><div class="svc-item-pr">₺850+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('ortho')"><div class="svc-item-ic">🔄</div><div class="svc-item-nm" data-i18n="ortho"></div><div class="svc-item-dsc" data-i18n="ortho_d"></div><div class="svc-item-pr">₺5.500+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('canal')"><div class="svc-item-ic">🩺</div><div class="svc-item-nm" data-i18n="canal"></div><div class="svc-item-dsc" data-i18n="canal_d"></div><div class="svc-item-pr">₺600+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('cleaning')"><div class="svc-item-ic">🧹</div><div class="svc-item-nm" data-i18n="cleaning"></div><div class="svc-item-dsc" data-i18n="cleaning_d"></div><div class="svc-item-pr">₺350+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('zirconium')"><div class="svc-item-ic">👑</div><div class="svc-item-nm" data-i18n="zirconium"></div><div class="svc-item-dsc" data-i18n="zirconium_d"></div><div class="svc-item-pr">₺2.200+</div></div>
+                <div class="svc-item" onclick="openSvcDetail('smile')"><div class="svc-item-ic">😁</div><div class="svc-item-nm" data-i18n="smile"></div><div class="svc-item-dsc" data-i18n="smile_d"></div><div class="svc-item-pr">₺1.200+</div></div>
+            </div>
+        </div>
+
+        <!-- SERVICES BOOKING — выбор услуги + запись (нижнее меню) -->
         <div class="page" id="page-services">
             <div class="phdr"><div class="phdr-t" data-i18n="services_title"></div><div class="phdr-s" data-i18n="services_sub"></div></div>
             <div class="svc-grid">

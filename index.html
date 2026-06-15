@@ -74,10 +74,13 @@
         }
 
         #app {
-            width:100%; max-width:430px; height:100vh; height:100dvh;
-            margin:0 auto; background:var(--bg);
+            position:fixed;
+            top:0; bottom:0;
+            left:max(0px, calc((100vw - 430px) / 2));
+            right:max(0px, calc((100vw - 430px) / 2));
+            background:var(--bg);
             display:flex; flex-direction:column;
-            position:relative; overflow:hidden;
+            overflow:hidden;
         }
 
         /* ── Status Bar ─── */
@@ -1573,14 +1576,6 @@ if('serviceWorker' in navigator){
 }
 
 /* ════════════ Init ════════════ */
-// Фикс высоты: window.innerHeight всегда даёт реальный видимый экран,
-// в отличие от dvh/vh которые могут расходиться на iOS standalone.
-function fixAppHeight(){
-    document.getElementById('app').style.height = window.innerHeight + 'px';
-}
-window.addEventListener('resize', fixAppHeight);
-fixAppHeight();
-
 // Запущено через установленную иконку? Прячем браузерную плашку и фейковый статус-бар.
 if(isStandalone()){
     document.documentElement.classList.add('standalone');

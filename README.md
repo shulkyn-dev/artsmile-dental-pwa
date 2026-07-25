@@ -2,6 +2,8 @@
 
 **Live demo: [artsmile-demo.pages.dev](https://artsmile-demo.pages.dev)** — open on your phone and try "Add to Home Screen".
 
+<img src="preview.jpg" width="360" alt="ArtSmile app screenshot">
+
 A booking platform for dental clinics: an installable **Progressive Web App** on the
 patient side (no app stores — open a link, add to home screen with one tap, use it like
 a regular app) backed by a real **Node.js/TypeScript API** on the server side.

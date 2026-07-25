@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ArtSmile">
+    <meta name="google" content="notranslate">
     <title>ArtSmile Dental Clinic</title>
 
     <link rel="manifest" href="manifest.webmanifest">
@@ -66,7 +67,8 @@
 
         html, body {
             width:100%; height:100%; height:100dvh;
-            overflow:hidden;
+            overflow-x:hidden;
+            overscroll-behavior-y:auto;
             font-family:'Inter',-apple-system,sans-serif;
             background: var(--p-dark);
         }
@@ -97,16 +99,21 @@
         .logo-sub  { font-size:11px; opacity:.65; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .hdr-right { display:flex; align-items:center; gap:6px; flex-shrink:0; }
         .theme-btn { width:36px; height:36px; background:rgba(255,255,255,.13); border-radius:11px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:#fff; }
-        .lang-sw { display:flex; background:rgba(255,255,255,.13); border-radius:9px; padding:3px; gap:1px; }
-        .lang-opt { display:flex; align-items:center; gap:4px; font-size:11px; font-weight:800; padding:5px 6px; border-radius:6px; color:rgba(255,255,255,.7); cursor:pointer; transition:all .18s; }
-        .lang-opt.on { background:var(--gold); color:#1a1400; }
-        .lang-opt .flag { width:17px; height:12px; border-radius:2px; overflow:hidden; display:block; flex-shrink:0; box-shadow:0 0 0 1px rgba(0,0,0,.12); }
-        .lang-opt .flag svg { display:block; width:100%; height:100%; }
+        .flag { width:17px; height:12px; border-radius:2px; overflow:hidden; display:inline-block; flex-shrink:0; box-shadow:0 0 0 1px rgba(0,0,0,.12); vertical-align:middle; }
+        .flag svg { display:block; width:100%; height:100%; }
+        /* dropdown lang picker */
+        .lang-dd { position:relative; }
+        .lang-dd-btn { display:flex; align-items:center; gap:5px; background:rgba(255,255,255,.13); border:none; border-radius:9px; padding:6px 10px 6px 8px; color:#fff; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap; }
+        .lang-dd-menu { position:absolute; top:calc(100% + 6px); right:0; background:var(--card); border-radius:13px; box-shadow:0 8px 32px rgba(0,0,0,.28); overflow:hidden; z-index:600; min-width:140px; transform:scale(.93) translateY(-4px); opacity:0; pointer-events:none; transition:transform .15s cubic-bezier(.4,0,.2,1),opacity .15s; }
+        .lang-dd-menu.open { transform:scale(1) translateY(0); opacity:1; pointer-events:all; }
+        .lang-dd-item { display:flex; align-items:center; gap:10px; padding:11px 14px; font-size:14px; font-weight:600; color:var(--text); cursor:pointer; transition:background .1s; }
+        .lang-dd-item:hover { background:var(--bg); }
+        .lang-dd-item.on { color:var(--p); font-weight:800; }
         .notif-btn { width:36px; height:36px; background:rgba(255,255,255,.13); border-radius:11px; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; flex-shrink:0; }
         .ndot { position:absolute; top:7px; right:7px; width:8px; height:8px; background:#EF4444; border-radius:50%; border:2px solid var(--p-dark); }
 
         /* ── Page wrapper ─── */
-        .content { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+        .content { flex:1; overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:auto; }
         .page { display:none; padding-bottom:calc(100px + env(safe-area-inset-bottom)); }
         .page.active { display:block; animation:fadeUp .22s ease; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
@@ -301,6 +308,37 @@
         .loyalty-bar { height:6px; background:var(--border); border-radius:3px; margin-top:8px; overflow:hidden; }
         .loyalty-bar-fill { height:100%; background:var(--gold); border-radius:3px; }
 
+        /* ── Payment sheet ── */
+        .sb-unpaid { background:#FEF3C7; color:#D97706; }
+        .pay-btn { background:var(--p); color:#fff; border:none; border-radius:10px; padding:8px 18px; font-size:13px; font-weight:700; cursor:pointer; }
+        .pay-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:500; opacity:0; pointer-events:none; transition:opacity .25s; }
+        .pay-overlay.active { opacity:1; pointer-events:all; }
+        .pay-sheet { position:fixed; bottom:0; left:max(0px,calc((100vw - 430px)/2)); right:max(0px,calc((100vw - 430px)/2)); background:var(--card); border-radius:20px 20px 0 0; z-index:501; padding:0 0 max(34px,env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .3s cubic-bezier(.32,.72,0,1); }
+        .pay-sheet.active { transform:translateY(0); }
+        .pay-sheet-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
+        .pay-sheet-ttl { font-size:17px; font-weight:800; color:var(--text); padding:16px 20px 0; }
+        .pay-sheet-svc { font-size:13px; color:var(--muted); padding:4px 20px 14px; border-bottom:1px solid var(--border); }
+        .pay-amount-row { display:flex; justify-content:space-between; align-items:center; padding:16px 20px 4px; }
+        .pay-amount-lbl { font-size:13px; color:var(--muted); }
+        .pay-amount-val { font-size:24px; font-weight:900; color:var(--p); }
+        .pay-card-wrap { margin:12px 20px 0; }
+        .pay-field-lbl { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+        .pay-input { width:100%; box-sizing:border-box; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; font-size:15px; color:var(--text); font-family:inherit; }
+        .pay-input:focus { outline:none; border-color:var(--p); }
+        .pay-row2 { display:flex; gap:10px; margin-top:10px; }
+        .pay-row2 > div { flex:1; }
+        .pay-logos { display:flex; gap:8px; padding:10px 20px 12px; align-items:center; }
+        .pay-logo-lbl { font-size:11px; color:var(--muted); }
+        .pay-logo { height:22px; background:var(--border); border-radius:5px; padding:0 8px; display:flex; align-items:center; font-size:11px; font-weight:800; color:var(--muted); letter-spacing:.5px; }
+        .pay-confirm { display:block; margin:4px 20px 14px; width:calc(100% - 40px); background:var(--p); color:#fff; border:none; border-radius:14px; padding:16px; font-size:16px; font-weight:800; cursor:pointer; }
+        .pay-success-wrap { display:none; flex-direction:column; align-items:center; padding:30px 20px 20px; text-align:center; }
+        .pay-success-wrap.show { display:flex; }
+        .pay-check { width:72px; height:72px; background:#D1FAE5; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:16px; animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); }
+        @keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+        .pay-success-ttl { font-size:20px; font-weight:800; color:var(--text); }
+        .pay-success-sub { font-size:14px; color:var(--muted); margin-top:6px; }
+        .pay-close-btn { margin-top:20px; background:var(--p); color:#fff; border:none; border-radius:14px; padding:14px 40px; font-size:15px; font-weight:700; cursor:pointer; }
+
         .overlay { position:absolute; inset:0; background:rgba(0,0,0,.52); z-index:150; opacity:0; pointer-events:none; transition:opacity .3s; }
         .overlay.on { opacity:1; pointer-events:all; }
 
@@ -480,13 +518,26 @@
                 </div>
             </div>
             <div class="hdr-right">
-                <div class="lang-sw" translate="no">
-                    <div class="lang-opt" data-l="tr" onclick="setLang('tr')">
-                        <span class="flag"><svg viewBox="0 0 12 8" preserveAspectRatio="none"><rect width="12" height="8" fill="#E30A17"/><circle cx="4.6" cy="4" r="1.9" fill="#fff"/><circle cx="5.3" cy="4" r="1.5" fill="#E30A17"/><path d="M7.6,3.15 7.8,3.73 8.41,3.74 7.92,4.11 8.1,4.69 7.6,4.34 7.1,4.69 7.28,4.11 6.79,3.74 7.4,3.73 Z" fill="#fff"/></svg></span>TR</div>
-                    <div class="lang-opt" data-l="ru" onclick="setLang('ru')">
-                        <span class="flag"><svg viewBox="0 0 9 6" preserveAspectRatio="none"><rect width="9" height="2" fill="#fff"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg></span>RU</div>
-                    <div class="lang-opt" data-l="en" onclick="setLang('en')">
-                        <span class="flag"><svg viewBox="0 0 60 40" preserveAspectRatio="none"><rect width="60" height="40" fill="#012169"/><path d="M0,0 60,40 M60,0 0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 60,40 M60,0 0,40" stroke="#C8102E" stroke-width="4"/><rect x="25" width="10" height="40" fill="#fff"/><rect y="15" width="60" height="10" fill="#fff"/><rect x="27" width="6" height="40" fill="#C8102E"/><rect y="17" width="60" height="6" fill="#C8102E"/></svg></span>EN</div>
+                <div class="lang-dd" id="langDd" translate="no">
+                    <button class="lang-dd-btn" id="langDdBtn" onclick="toggleLangDd(event)" aria-haspopup="listbox">
+                        <span class="flag" id="langDdFlag"></span>
+                        <span id="langDdCode">TR</span>
+                        <svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="lang-dd-menu" id="langDdMenu" role="listbox">
+                        <div class="lang-dd-item" data-l="tr" onclick="setLang('tr');closeLangDd()">
+                            <span class="flag"><svg viewBox="0 0 12 8" preserveAspectRatio="none"><rect width="12" height="8" fill="#E30A17"/><circle cx="4.6" cy="4" r="1.9" fill="#fff"/><circle cx="5.3" cy="4" r="1.5" fill="#E30A17"/><path d="M7.6,3.15 7.8,3.73 8.41,3.74 7.92,4.11 8.1,4.69 7.6,4.34 7.1,4.69 7.28,4.11 6.79,3.74 7.4,3.73 Z" fill="#fff"/></svg></span>
+                            Türkçe
+                        </div>
+                        <div class="lang-dd-item" data-l="ru" onclick="setLang('ru');closeLangDd()">
+                            <span class="flag"><svg viewBox="0 0 9 6" preserveAspectRatio="none"><rect width="9" height="2" fill="#fff"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg></span>
+                            Русский
+                        </div>
+                        <div class="lang-dd-item" data-l="en" onclick="setLang('en');closeLangDd()">
+                            <span class="flag"><svg viewBox="0 0 60 40" preserveAspectRatio="none"><rect width="60" height="40" fill="#B22234"/><rect y="3.08" width="60" height="3.08" fill="#fff"/><rect y="9.23" width="60" height="3.08" fill="#fff"/><rect y="15.38" width="60" height="3.08" fill="#fff"/><rect y="21.54" width="60" height="3.08" fill="#fff"/><rect y="27.69" width="60" height="3.08" fill="#fff"/><rect y="33.85" width="60" height="3.08" fill="#fff"/><rect width="24" height="21.54" fill="#3C3B6E"/></svg></span>
+                            English
+                        </div>
+                    </div>
                 </div>
                 <div class="theme-btn" id="theme-btn" onclick="toggleTheme()"></div>
                 <div class="notif-btn" onclick="openNotifications()">
@@ -639,6 +690,19 @@
                 <div class="divlbl" data-i18n="past_visits"></div>
             </div>
 
+            <!-- Визит 0 — UNPAID (payment demo) -->
+            <div class="hist-item" id="visit-today">
+                <div class="hist-top">
+                    <div class="hist-date-col"><div class="hist-day">15</div><div class="hist-mon" data-i18n="mon_jun"></div></div>
+                    <div style="flex:1"><div class="hist-svc" data-i18n="apt_whitening"></div><div class="hist-doc">Dr. Zeynep Arslan · 🕑 14:00</div></div>
+                    <span class="sbadge sb-unpaid" id="visit-today-badge" data-i18n="pay_unpaid"></span>
+                </div>
+                <div class="hist-footer" id="visit-today-footer">
+                    <div><div class="hist-cost-lbl" data-i18n="pay_total"></div><div class="hist-cost">₺850</div></div>
+                    <button class="pay-btn" onclick="openPay('apt_whitening','₺850')" data-i18n="pay_btn"></button>
+                </div>
+            </div>
+
             <!-- Визит 1 -->
             <div class="hist-item">
                 <div class="hist-top">
@@ -702,6 +766,47 @@
 
         </div>
 
+    </div>
+
+    <!-- Payment overlay + sheet -->
+    <div class="pay-overlay" id="payOverlay" onclick="closePay()"></div>
+    <div class="pay-sheet" id="paySheet">
+        <div class="pay-sheet-handle"></div>
+        <div id="payForm">
+            <div class="pay-sheet-ttl" data-i18n="pay_title"></div>
+            <div class="pay-sheet-svc" id="paySvcName"></div>
+            <div class="pay-amount-row">
+                <span class="pay-amount-lbl" data-i18n="pay_total"></span>
+                <span class="pay-amount-val" id="payAmountVal"></span>
+            </div>
+            <div class="pay-card-wrap">
+                <div class="pay-field-lbl" data-i18n="pay_card"></div>
+                <input class="pay-input" id="payCardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)" inputmode="numeric">
+                <div class="pay-row2">
+                    <div>
+                        <div class="pay-field-lbl" data-i18n="pay_expiry"></div>
+                        <input class="pay-input" placeholder="MM/YY" maxlength="5" oninput="fmtExpiry(this)" inputmode="numeric">
+                    </div>
+                    <div>
+                        <div class="pay-field-lbl">CVV</div>
+                        <input class="pay-input" placeholder="•••" maxlength="3" inputmode="numeric" type="password">
+                    </div>
+                </div>
+            </div>
+            <div class="pay-logos">
+                <span class="pay-logo-lbl" data-i18n="pay_secure"></span>
+                <span class="pay-logo">VISA</span>
+                <span class="pay-logo">MC</span>
+                <span class="pay-logo">iyzico</span>
+            </div>
+            <button class="pay-confirm" id="payConfirmBtn" onclick="confirmPay()" data-i18n="pay_confirm"></button>
+        </div>
+        <div class="pay-success-wrap" id="paySuccess">
+            <div class="pay-check">✓</div>
+            <div class="pay-success-ttl" data-i18n="pay_success_ttl"></div>
+            <div class="pay-success-sub" id="paySuccessSub"></div>
+            <button class="pay-close-btn" onclick="closePay()" data-i18n="pay_close"></button>
+        </div>
     </div>
 
     <div class="wa-fab" onclick="showWA()">💬</div>
@@ -768,6 +873,8 @@ const I18N = {
   tr: {
     clinic_sub:"Dental Clinic · İstanbul",
     ib_title:"Ana ekrana ekle — ücretsiz", ib_sub:"Uygulama gibi açılır, internet gerektirmez", ib_btn:"Ekle",
+    ib_title_manual:"Uygulamayı yükle", ib_sub_manual:"Tarayıcı menüsünden ⋮ yükle", ib_btn_manual:"⋮ Menü → Yükle",
+    hint_tap_menu:"⋮ Menüye Tıkla", hint_choose:"«Uygulamayı yükle» veya\n«Ana ekrana ekle» seç", hint_dismiss:"Kapatmak için ekrana dokun",
     install_done:"✅ Ana ekrana eklendi!", install_have:"✅ Uygulama zaten yüklü",
     hero_badge:"⭐ İstanbul'un #1 Kliniği", hero_title:"Sağlıklı gülüş,<br>mutlu hayat ✨", hero_cta:"Randevu Al  →",
     emg_ban_ttl:"🦷 Diş ağrınız mı var?", emg_ban_sub:"Hemen acil randevu alın — uygun doktoru biz buluruz",
@@ -822,6 +929,10 @@ const I18N = {
     note_tartar:"Alt ön dişlerde hafif-orta plak birikimi tespit edildi. Ultrasonik skaler ile profesyonel temizlik yapıldı. Florür jel uygulandı. Elektrikli diş fırçası kullanımı önerildi.",
     note_implant:"Straumann BL ∅4.1mm implant, lokal anestezi altında (artikain %4 — penisilin alerjisi kayıtta, kullanılmadı) #36 pozisyonuna yerleştirildi. Primer stabilite sağlandı. Dikiş atıldı. Reçete: Augmentin 1g 2×5gün, ibuprofen 400mg gerektiğinde.",
     paid:"Ödendi",
+    apt_whitening:"Diş Beyazlatma", pay_unpaid:"Ödeme Bekliyor",
+    pay_btn:"Öde", pay_title:"Ödeme", pay_total:"Toplam", pay_card:"Kart Numarası",
+    pay_expiry:"Son Kullanma", pay_secure:"Güvenli:", pay_confirm:"Ödemeyi Tamamla",
+    pay_success_ttl:"Ödeme Başarılı! 🎉", pay_close:"Kapat",
     loyalty_pts:"680 Bonus Puan", loyalty_sub:"Sonraki ziyarette %10 indirim için 320 puan daha gerekiyor",
     weekdays:["Pt","Sa","Ça","Pe","Cu","Ct","Pa"],
     m_title_1:"Randevu Al", m_title_2:"Tarih & Doktor", m_title_3:"Onay", m_title_4:"Tamamlandı",
@@ -889,6 +1000,8 @@ const I18N = {
   ru: {
     clinic_sub:"Стоматология · Стамбул",
     ib_title:"Добавить на экран — бесплатно", ib_sub:"Открывается как приложение, без интернета", ib_btn:"Добавить",
+    ib_title_manual:"Установить приложение", ib_sub_manual:"Через меню браузера ⋮", ib_btn_manual:"⋮ → Установить",
+    hint_tap_menu:"Нажмите ⋮", hint_choose:"Выберите «Установить приложение»\nили «Добавить на гл. экран»", hint_dismiss:"Нажмите куда угодно чтобы закрыть",
     install_done:"✅ Добавлено на главный экран!", install_have:"✅ Приложение уже установлено",
     hero_badge:"⭐ Клиника №1 в Стамбуле", hero_title:"Здоровая улыбка,<br>счастливая жизнь ✨", hero_cta:"Записаться  →",
     emg_ban_ttl:"🦷 Болит зуб?", emg_ban_sub:"Срочная запись — врача подберём за вас",
@@ -943,6 +1056,10 @@ const I18N = {
     note_tartar:"Умеренный налёт на нижних передних зубах. Проведена ультразвуковая чистка. Нанесён фторидный гель. Рекомендована электрическая щётка.",
     note_implant:"Установлен имплант Straumann BL ∅4.1мм в позицию #36 под местной анестезией (артикаин 4%, пенициллин не применялся — аллергия в карте). Первичная стабильность достигнута. Швы наложены. Назначено: Аугментин 1г 2×5дн, ибупрофен 400мг по необходимости.",
     paid:"Оплачено",
+    apt_whitening:"Отбеливание зубов", pay_unpaid:"Ожидает оплаты",
+    pay_btn:"Оплатить", pay_title:"Оплата", pay_total:"Итого", pay_card:"Номер карты",
+    pay_expiry:"Срок", pay_secure:"Безопасно:", pay_confirm:"Оплатить",
+    pay_success_ttl:"Оплата прошла! 🎉", pay_close:"Закрыть",
     loyalty_pts:"680 бонусных баллов", loyalty_sub:"Ещё 320 баллов — и скидка 10% на следующий визит",
     weekdays:["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],
     m_title_1:"Записаться", m_title_2:"Дата и врач", m_title_3:"Подтверждение", m_title_4:"Готово",
@@ -1010,6 +1127,8 @@ const I18N = {
   en: {
     clinic_sub:"Dental Clinic · Istanbul",
     ib_title:"Add to Home Screen — free", ib_sub:"Opens like an app, works offline", ib_btn:"Add",
+    ib_title_manual:"Install the app", ib_sub_manual:"Via browser menu ⋮", ib_btn_manual:"⋮ → Install",
+    hint_tap_menu:"Tap ⋮ Menu", hint_choose:"Choose 'Install app' or\n'Add to Home Screen'", hint_dismiss:"Tap anywhere to close",
     install_done:"✅ Added to home screen!", install_have:"✅ App already installed",
     hero_badge:"⭐ Istanbul's #1 Clinic", hero_title:"Healthy smile,<br>happy life ✨", hero_cta:"Book Now  →",
     emg_ban_ttl:"🦷 Got a toothache?", emg_ban_sub:"Book urgent care — we'll match the right doctor",
@@ -1064,6 +1183,10 @@ const I18N = {
     note_tartar:"Mild-moderate plaque on lower anteriors. Ultrasonic scaling performed. Fluoride gel applied. Electric toothbrush recommended.",
     note_implant:"Straumann BL ∅4.1mm implant placed at site #36 under local anaesthesia (articaine 4% — no penicillin, allergy on file). Primary stability achieved. Sutures placed. Rx: Augmentin 1g BD×5d, ibuprofen 400mg PRN.",
     paid:"Paid",
+    apt_whitening:"Teeth Whitening", pay_unpaid:"Payment Due",
+    pay_btn:"Pay", pay_title:"Payment", pay_total:"Total", pay_card:"Card Number",
+    pay_expiry:"Expiry", pay_secure:"Secure:", pay_confirm:"Confirm Payment",
+    pay_success_ttl:"Payment Successful! 🎉", pay_close:"Close",
     loyalty_pts:"680 Bonus Points", loyalty_sub:"320 more points until 10% discount on your next visit",
     weekdays:["Mo","Tu","We","Th","Fr","Sa","Su"],
     m_title_1:"Book Appointment", m_title_2:"Date & Doctor", m_title_3:"Confirmation", m_title_4:"Done",
@@ -1137,7 +1260,7 @@ function applyLang(){
     document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
     document.querySelectorAll('[data-i18n-html]').forEach(el=>{ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
     document.documentElement.lang = LANG;
-    document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('on', o.dataset.l===LANG));
+    updateLangDd();
     renderProfile();
     renderContact();
     renderDoctors();
@@ -1146,7 +1269,23 @@ function applyLang(){
     if(document.getElementById('ntmodal').classList.contains('on')) renderNotifications();
     if(document.getElementById('rvmodal').classList.contains('on')) renderReview();
 }
-function setLang(l){ LANG=l; localStorage.setItem('lang',l); applyLang(); }
+const LANG_FLAGS = {
+    tr:'<svg viewBox="0 0 12 8" preserveAspectRatio="none"><rect width="12" height="8" fill="#E30A17"/><circle cx="4.6" cy="4" r="1.9" fill="#fff"/><circle cx="5.3" cy="4" r="1.5" fill="#E30A17"/><path d="M7.6,3.15 7.8,3.73 8.41,3.74 7.92,4.11 8.1,4.69 7.6,4.34 7.1,4.69 7.28,4.11 6.79,3.74 7.4,3.73 Z" fill="#fff"/></svg>',
+    ru:'<svg viewBox="0 0 9 6" preserveAspectRatio="none"><rect width="9" height="2" fill="#fff"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg>',
+    en:'<svg viewBox="0 0 60 40" preserveAspectRatio="none"><rect width="60" height="40" fill="#B22234"/><rect y="3.08" width="60" height="3.08" fill="#fff"/><rect y="9.23" width="60" height="3.08" fill="#fff"/><rect y="15.38" width="60" height="3.08" fill="#fff"/><rect y="21.54" width="60" height="3.08" fill="#fff"/><rect y="27.69" width="60" height="3.08" fill="#fff"/><rect y="33.85" width="60" height="3.08" fill="#fff"/><rect width="24" height="21.54" fill="#3C3B6E"/></svg>'
+};
+function updateLangDd(){
+    const flag = document.getElementById('langDdFlag');
+    const code = document.getElementById('langDdCode');
+    if(flag) flag.innerHTML = LANG_FLAGS[LANG];
+    if(code) code.textContent = LANG.toUpperCase();
+    document.querySelectorAll('.lang-dd-item').forEach(el => el.classList.toggle('on', el.dataset.l === LANG));
+    document.documentElement.lang = LANG;
+}
+function toggleLangDd(e){ e.stopPropagation(); document.getElementById('langDdMenu').classList.toggle('open'); }
+function closeLangDd(){ document.getElementById('langDdMenu')?.classList.remove('open'); }
+document.addEventListener('click', closeLangDd);
+function setLang(l){ LANG=l; localStorage.setItem('lang',l); applyLang(); updateLangDd(); }
 
 /* ════════════ Theme (light / dark) ════════════ */
 let THEME = localStorage.getItem('theme') || 'light';
@@ -1257,7 +1396,9 @@ function toggleDoc(id){
     } else openDoc = null;
 }
 const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
-const TODAY = 13;
+const TODAY = new Date().getDate();
+const API = 'http://localhost:3000';
+let serverTakenSlots = [];
 
 /* Clinic contact / hours */
 const CLINIC_PHONE = '+90 212 555 01 23';
@@ -1286,8 +1427,19 @@ let myAppointments = [
 ];
 
 function slotTaken(docId, day, time){
+  if(serverTakenSlots.includes(time)) return true;
   if(docId==='any') return eligibleDoctors().every(d=>booked.has(d+'|'+day+'|'+time));
   return booked.has(docId+'|'+day+'|'+time);
+}
+async function fetchSlots(day){
+  try {
+    const date = `2026-07-${String(day).padStart(2,'0')}`;
+    const res = await fetch(`${API}/appointments/slots?date=${date}`);
+    const data = await res.json();
+    serverTakenSlots = data.taken || [];
+  } catch(e) {
+    serverTakenSlots = [];
+  }
 }
 function assignDoctor(day, time){
   const elig = eligibleDoctors();
@@ -1486,7 +1638,7 @@ function calDays(){
 /* ── Selectors / flow ── */
 function selSvc(v){ bk.svc=v; render(); }
 function selTime(v){ bk.time=v; render(); }
-function selDate(d){ bk.dateDay=d; if(bk.time && slotTaken(bk.doc,d,bk.time)) bk.time=''; render(); }
+async function selDate(d){ bk.dateDay=d; if(bk.time && slotTaken(bk.doc,d,bk.time)) bk.time=''; await fetchSlots(d); render(); }
 function selDoc(id){ bk.doc=id; if(bk.dateDay && bk.time && slotTaken(id,bk.dateDay,bk.time)) bk.time=''; render(); }
 function notSure(){ bk.svc='notsure'; bk.doc='any'; step=2; render(); }
 function emgFromStep1(){ bk.svc='emergency'; bk.doc='any'; bk.dateDay=TODAY; step=2; render(); }
@@ -1498,15 +1650,41 @@ function isDuplicate(){
 }
 
 /* ── Confirm (with double-submit + duplicate protection) ── */
-function confirmBooking(){
+async function confirmBooking(){
     if(submitting) return;
     if(isDuplicate()){ render(); return; }
     submitting=true;
     const docId = (bk.doc==='any') ? assignDoctor(bk.dateDay, bk.time) : bk.doc;
-    // lock the slot so it can never be double-booked
+    const date = `2026-07-${String(bk.dateDay).padStart(2,'0')}`;
+
+    try {
+        const res = await fetch(`${API}/appointments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                patient_name: 'Demo Patient',
+                service: t(bk.svc),
+                date,
+                time: bk.time,
+                notes: `Doctor: ${DOCTORS[docId]}`
+            })
+        });
+        const data = await res.json();
+        if(!data.success){
+            // слот уже занят на сервере — обновляем слоты и сбрасываем выбор
+            submitting=false;
+            await fetchSlots(bk.dateDay);
+            bk.time='';
+            render();
+            return;
+        }
+    } catch(e){
+        // сервер недоступен — продолжаем локально (офлайн-режим)
+    }
+
     booked.add(docId+'|'+bk.dateDay+'|'+bk.time);
     bk.assignedDoc = DOCTORS[docId];
-    myAppointments.push({ svc:bk.svc, doc:DOCTORS[docId], day:bk.dateDay, mon:'jun', time:bk.time, status:'confirmed' });
+    myAppointments.push({ svc:bk.svc, doc:DOCTORS[docId], day:bk.dateDay, mon:'jul', time:bk.time, status:'confirmed' });
     renderProfile();
     step=4; render();
 }
@@ -1697,8 +1875,47 @@ async function doInstall(){
         if(outcome==='accepted'){ const ib=document.getElementById('ibanner'); if(ib) ib.style.display='none'; toast(t('install_done')); }
         return;
     }
-    showInstallGuide();
+    // Native prompt unavailable
+    if(isMobile() && !isiOS()){
+        showAndroidInstallHint();
+    } else {
+        showInstallGuide();
+    }
 }
+
+function showAndroidInstallHint(){
+    const existing = document.getElementById('android-hint');
+    if(existing){ existing.remove(); return; }
+    const hint = document.createElement('div');
+    hint.id = 'android-hint';
+    hint.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:2000;display:flex;flex-direction:column;align-items:flex-end;padding:52px 16px 0;';
+    hint.onclick = () => hint.remove();
+    hint.innerHTML = `
+        <div style="text-align:right;color:#fff;max-width:240px;">
+            <div style="font-size:48px;line-height:1;margin-bottom:8px;">↑</div>
+            <div style="font-size:22px;font-weight:900;letter-spacing:-.3px;">${t('hint_tap_menu')}</div>
+            <div style="font-size:15px;margin-top:8px;line-height:1.5;opacity:.9;">${t('hint_choose')}</div>
+            <div style="margin-top:24px;background:rgba(255,255,255,.15);border-radius:12px;padding:10px 16px;font-size:12px;opacity:.75;">${t('hint_dismiss')}</div>
+        </div>`;
+    document.body.appendChild(hint);
+}
+
+// After 3s on Android without native prompt → update banner text
+window.addEventListener('load', ()=>{
+    if(!isMobile() || isiOS() || isStandalone()) return;
+    setTimeout(()=>{
+        if(!deferredPrompt){
+            const ib = document.getElementById('ibanner');
+            if(!ib || ib.style.display==='none') return;
+            const ttl = ib.querySelector('.ib-ttl');
+            const sub = ib.querySelector('.ib-sub');
+            const btn = ib.querySelector('.ib-btn');
+            if(ttl) ttl.textContent = t('ib_title_manual');
+            if(sub) sub.textContent = t('ib_sub_manual');
+            if(btn) btn.textContent = t('ib_btn_manual');
+        }
+    }, 3000);
+});
 
 function showInstallGuide(){
     const ios = isiOS();
@@ -1758,6 +1975,45 @@ if('serviceWorker' in navigator){
             });
         }).catch(()=>{});
     });
+}
+
+/* ════════════ Payment ════════════ */
+function openPay(svc, amount) {
+    document.getElementById('paySvcName').textContent = t(svc);
+    document.getElementById('payAmountVal').textContent = amount;
+    document.getElementById('payCardNum').value = '';
+    document.getElementById('payForm').style.display = '';
+    document.getElementById('paySuccess').classList.remove('show');
+    const btn = document.getElementById('payConfirmBtn');
+    btn.textContent = t('pay_confirm'); btn.disabled = false;
+    document.getElementById('payOverlay').classList.add('active');
+    document.getElementById('paySheet').classList.add('active');
+}
+function closePay() {
+    document.getElementById('payOverlay').classList.remove('active');
+    document.getElementById('paySheet').classList.remove('active');
+}
+function confirmPay() {
+    const btn = document.getElementById('payConfirmBtn');
+    btn.textContent = '···'; btn.disabled = true;
+    setTimeout(() => {
+        const footer = document.getElementById('visit-today-footer');
+        if (footer) footer.innerHTML = `<div><div class="hist-cost-lbl">${t('paid')}</div><div class="hist-cost">₺850</div></div><span class="sbadge sb-done">✓</span>`;
+        const badge = document.getElementById('visit-today-badge');
+        if (badge) { badge.className = 'sbadge sb-done'; badge.textContent = t('st_done'); }
+        document.getElementById('payForm').style.display = 'none';
+        document.getElementById('paySuccessSub').textContent = `₺850 · ${t('apt_whitening')}`;
+        document.getElementById('paySuccess').classList.add('show');
+    }, 1800);
+}
+function fmtCard(el) {
+    let v = el.value.replace(/\D/g,'').substring(0,16);
+    el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function fmtExpiry(el) {
+    let v = el.value.replace(/\D/g,'').substring(0,4);
+    if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
+    el.value = v;
 }
 
 /* ════════════ Init ════════════ */

@@ -17,3 +17,7 @@ qr_artsmile.png
 # OS
 Thumbs.db
 .DS_Store
+
+# Локальные dev-настройки / внутренние материалы по продажам (не для публикации)
+.claude/
+outreach/

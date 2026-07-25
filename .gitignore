@@ -21,3 +21,8 @@ Thumbs.db
 # Локальные dev-настройки / внутренние материалы по продажам (не для публикации)
 .claude/
 outreach/
+
+# Node.js backend build/deps
+backend/node_modules/
+backend/dist/
+backend/*.db

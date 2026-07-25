@@ -27,18 +27,30 @@ Built as a sales demo for cold outreach to Turkish dental clinics — show the r
 
 ## Stack
 
-Plain **HTML/CSS/JS**, no framework — a deliberate choice, so the demo weighs almost
-nothing and opens instantly on slow mobile connections (a common scenario for a clinic's
-end clients). Hosted on Cloudflare Pages.
+**Frontend:** plain **HTML/CSS/JS**, no framework — a deliberate choice, so the demo
+weighs almost nothing and opens instantly on slow mobile connections (a common scenario
+for a clinic's end clients). Hosted on Cloudflare Pages.
+
+**Backend:** [`backend/`](backend) — a real **Node.js + TypeScript + Express** API
+(SQLite via `better-sqlite3`) turning the static demo into an actual multi-clinic SaaS:
+appointments and patients endpoints, ready to swap the frontend's mocked data for live
+API calls. See [backend/README.md](backend/README.md).
 
 ## Running locally
 
+**Frontend only (demo mode, mocked data):**
 ```bash
 npx serve -p 3456 .
 ```
+Or just open `index.html` in a browser — fully static, no backend required.
 
-Or just open `index.html` in a browser — the app is fully static, no backend required
-(data is mocked, baked into the JS).
+**With the real backend:**
+```bash
+cd backend
+npm install
+npm run dev
+```
+API runs on `http://localhost:3000`.
 
 ## Deployment
 

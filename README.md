@@ -1,4 +1,6 @@
-# 🦷 ArtSmile — Multi-Clinic Dental Booking SaaS
+# 🦷 ArtSmile — Dental Clinic Booking Platform
+
+**Live demo: [artsmile-demo.pages.dev](https://artsmile-demo.pages.dev)** — open on your phone and try "Add to Home Screen".
 
 A booking platform for dental clinics: an installable **Progressive Web App** on the
 patient side (no app stores — open a link, add to home screen with one tap, use it like

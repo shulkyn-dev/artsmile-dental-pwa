@@ -1,11 +1,13 @@
-# 🦷 ArtSmile — Dental Clinic PWA Demo
+# 🦷 ArtSmile — Multi-Clinic Dental Booking SaaS
 
-A booking demo for dental clinics — a **Progressive Web App**, no app stores involved:
-the patient opens a link, adds it to the home screen with one tap, and uses it like a
-regular app from then on.
+A booking platform for dental clinics: an installable **Progressive Web App** on the
+patient side (no app stores — open a link, add to home screen with one tap, use it like
+a regular app) backed by a real **Node.js/TypeScript API** on the server side.
 
-Built as a sales demo for cold outreach to Turkish dental clinics — show the result in
-30 seconds via a link instead of describing it in words.
+Started as a sales demo for cold outreach to Turkish dental clinics (show the result in
+30 seconds via a link instead of describing it in words) and grew into a real backend:
+a working appointments/patients API replacing the frontend's mocked data — the
+foundation for turning a single-clinic demo into a proper SaaS.
 
 ## What's inside
 

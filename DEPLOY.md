@@ -1,58 +1,55 @@
-# 🚀 Как залить ArtSmile demo на Cloudflare (и сделать QR)
+# 🚀 Deploying the ArtSmile demo to Cloudflare (and generating a QR code)
 
-Папка целиком готова к публикации. Все файлы статические — никакого сервера не нужно.
+The folder is ready to publish as-is. Everything is static — no server needed.
 
-Файлы, которые публикуются:
-- `index.html` — само приложение
-- `manifest.webmanifest` — делает его «устанавливаемым»
-- `sw.js` — офлайн-режим (Service Worker)
-- `icon-192.png`, `icon-512.png`, `icon-maskable.png`, `apple-touch-icon.png`, `favicon.png` — иконки
-- (`_genicons.py` и этот `DEPLOY.md` — служебные, можно не загружать, но они не мешают)
+Files that get published:
+- `index.html` — the app itself
+- `manifest.webmanifest` — makes it "installable"
+- `sw.js` — offline mode (Service Worker)
+- `icon-192.png`, `icon-512.png`, `icon-maskable.png`, `apple-touch-icon.png`, `favicon.png` — icons
+- (`_genicons.py` and this `DEPLOY.md` are dev-only, safe to skip uploading, but harmless if included)
 
 ---
 
-## ВАРИАНТ A — Перетащить мышкой (проще всего, 0 команд) ⭐
+## OPTION A — Drag and drop (simplest, 0 commands) ⭐
 
-1. Зайди на **https://dash.cloudflare.com/** → раздел **Workers & Pages**.
-2. Нажми **Create** → вкладка **Pages** → **Upload assets**.
-3. Назови проект, например `artsmile-demo`.
-4. **Перетащи всю папку** `dental_pwa_demo` в окно загрузки (или выбери файлы).
-5. Нажми **Deploy site**.
-6. Через ~20 секунд получишь ссылку вида:
+1. Go to **https://dash.cloudflare.com/** → **Workers & Pages**.
+2. Click **Create** → **Pages** tab → **Upload assets**.
+3. Name the project, e.g. `artsmile-demo`.
+4. **Drag the whole folder** `dental_pwa_demo` into the upload window (or select the files).
+5. Click **Deploy site**.
+6. In ~20 seconds you'll get a link like:
    `https://artsmile-demo.pages.dev`
 
-Готово. Эту ссылку открываешь на телефоне → «Добавить на главный экран».
+Done. Open that link on a phone → "Add to Home Screen".
 
 ---
 
-## ВАРИАНТ B — Через wrangler (терминал)
+## OPTION B — Via wrangler (terminal)
 
 ```powershell
-# 1. Войти в Cloudflare (откроется браузер, нажми Allow)
+# 1. Log in to Cloudflare (opens a browser, click Allow)
 npx wrangler login
 
-# 2. Залить папку (выполнять из папки проекта)
+# 2. Deploy the folder (run from the project folder)
 npx wrangler pages deploy . --project-name=artsmile-demo
 ```
 
-После `wrangler login` я смогу запускать деплой за тебя по команде.
-
 ---
 
-## После деплоя — сделать QR для ресепшена
+## After deploying — generate a QR code for the front desk
 
-Когда получишь ссылку (например `https://artsmile-demo.pages.dev`),
-скажи мне её — я сгенерирую QR-код PNG, который можно распечатать и
-поставить на стойку. Пациент сканирует → открывает приложение → ставит на телефон.
+Once you have the link (e.g. `https://artsmile-demo.pages.dev`), generate a printable QR PNG:
 
-Или сам:
 ```powershell
 python make_qr.py https://artsmile-demo.pages.dev
 ```
 
+Patient scans it → app opens → adds it to their phone.
+
 ---
 
-## ⚠️ Важно про установку приложения
-«Добавить на главный экран» (полноценный режим приложения, иконка, офлайн)
-**работает только по HTTPS**. Локально (`localhost`) — частично.
-Cloudflare даёт HTTPS автоматически, поэтому установка заработает сразу после заливки.
+## ⚠️ Important note on installability
+"Add to Home Screen" (full app mode, icon, offline support) **only works over HTTPS**.
+Locally (`localhost`) it works partially. Cloudflare provides HTTPS automatically, so
+installability works right after deployment.

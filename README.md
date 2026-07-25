@@ -1,45 +1,45 @@
 # 🦷 ArtSmile — Dental Clinic PWA Demo
 
-Демо-приложение онлайн-записи для стоматологических клиник — **Progressive Web App**,
-без магазинов приложений: пациент открывает ссылку, ставит "на главный экран" одним тапом
-и дальше пользуется как обычным приложением.
+A booking demo for dental clinics — a **Progressive Web App**, no app stores involved:
+the patient opens a link, adds it to the home screen with one tap, and uses it like a
+regular app from then on.
 
-Сделано как продающее демо для холодного питча турецким стоматологиям — показать
-результат за 30 секунд по ссылке, а не описывать словами.
+Built as a sales demo for cold outreach to Turkish dental clinics — show the result in
+30 seconds via a link instead of describing it in words.
 
-## Что внутри
+## What's inside
 
-- Запись на приём: услуга → врач → время, с учётом какие врачи оказывают какую услугу
-- Профиль пациента: личные данные, медкарта, история лечения с заметками врача, программа лояльности
-- Карточки врачей: фото, био, отзывы, список услуг — разворачиваются по тапу
-- Экстренная запись в один клик для острой боли
-- Тёмная тема (переключатель в шапке, сохраняется в localStorage)
-- Установка на экран: свой сценарий для iOS Safari (баннер с подсказкой) и десктопа
-- Мультиязычность (проект собирался под турецкий рынок)
-- Service Worker с автообновлением (`sw.js`, версионирование кэша)
+- Booking flow: service → doctor → time slot, aware of which doctors offer which service
+- Patient profile: personal info, medical record, treatment history with doctor's notes, loyalty program
+- Doctor cards: photo, bio, reviews, service list — expand on tap
+- One-tap emergency booking for acute pain
+- Dark theme (toggle in the header, persisted in localStorage)
+- Home screen install: custom flow for iOS Safari (hint banner) and desktop
+- Multi-language (built for the Turkish market)
+- Service Worker with auto-update (`sw.js`, cache versioning)
 
-## Технические детали, которые обычно упускают в PWA-демках
+## Technical details that usually get skipped in PWA demos
 
-- `position: fixed` для нижней навигации отдельно допилен под iOS Safari
-  (стандартный `100dvh` там "плавает", пришлось фиксировать высоту через `window.innerHeight` в JS)
-- `manifest.webmanifest` с уникальным `id` — чтобы Chrome не считал переустановку новым приложением
-- Safe-area padding для чёлки/жестовой панели iPhone
+- `position: fixed` for the bottom nav bar, specifically patched for iOS Safari
+  (standard `100dvh` "floats" there, had to pin the height via `window.innerHeight` in JS)
+- `manifest.webmanifest` with a unique `id` — so Chrome doesn't treat a reinstall as a new app
+- Safe-area padding for the iPhone notch / gesture bar
 
-## Стек
+## Stack
 
-Чистый **HTML/CSS/JS** без фреймворка — осознанно, чтобы демо весило копейки и открывалось
-мгновенно на медленном мобильном интернете (частый сценарий у конечных клиентов клиник).
-Хостится на Cloudflare Pages.
+Plain **HTML/CSS/JS**, no framework — a deliberate choice, so the demo weighs almost
+nothing and opens instantly on slow mobile connections (a common scenario for a clinic's
+end clients). Hosted on Cloudflare Pages.
 
-## Запуск локально
+## Running locally
 
 ```bash
 npx serve -p 3456 .
 ```
 
-Или просто открыть `index.html` в браузере — приложение полностью статическое,
-бэкенда не требует (данные — моковые, зашиты в JS).
+Or just open `index.html` in a browser — the app is fully static, no backend required
+(data is mocked, baked into the JS).
 
-## Деплой
+## Deployment
 
-См. [DEPLOY.md](DEPLOY.md) — Cloudflare Pages, `public/` собирается из исходников.
+See [DEPLOY.md](DEPLOY.md) — Cloudflare Pages, `public/` is built from the source files.
